@@ -146,7 +146,7 @@
                                     <a href="fullpost.php?id=<?= $PostId; ?>" class="card-link btn btn-primary">Read More >></a>
                                 </div>
                                 <div class="card-footer text-muted">
-                                    <?= $years, $months, $days; ?> days ago
+                                <?= $years?> years, <?= $months ?> months, <?= $days; ?> days ago
                                 </div>
                             </div>
                         </div>
