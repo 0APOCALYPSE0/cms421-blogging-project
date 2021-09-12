@@ -14,7 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <title>Comments</title>
 </head>
 <body>
@@ -22,37 +22,37 @@
     <!-- Navbar  -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a href="#" class="navbar-brand">CMS Blogging</a>
+            <a href="<?= $serverName; ?>/index" class="navbar-brand">CMS Blogging</a>
             <button class="navbar-toggler" data-toggle='collapse' data-target='#navbarcollapseCMS'>
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapseCMS">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="myprofile.php" class="nav-link"> <i class='fas fa-user'></i> My Profile</a>
+                        <a href="<?= $serverName; ?>/myprofile" class="nav-link"> <i class='fas fa-user'></i>My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="dashboard.php" class="nav-link">Dashboard</a>
+                        <a href="<?= $serverName; ?>/dashboard" class="nav-link">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="posts.php" class="nav-link">Posts</a>
+                        <a href="<?= $serverName; ?>/posts" class="nav-link">Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="categories.php" class="nav-link"> Categories</a>
+                        <a href="<?= $serverName; ?>/categories" class="nav-link">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a href="admin.php" class="nav-link">Manage Admins</a>
+                        <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
                     </li>
                     <li class="nav-item">
-                        <a href="comments.php" class="nav-link">Comments</a>
+                        <a href="<?= $serverName; ?>/comments" class="nav-link">Comments</a>
                     </li>
                     <li class="nav-item">
-                        <a href="blog.php?page=1" class="nav-link">Live Blog</a>
+                        <a href="<?= $serverName; ?>/blog/1" class="nav-link">Live Blog</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="logout.php" class="nav-link"><i class='fas fa-user-times'></i> Log Out</a>
+                        <a href="<?= $serverName; ?>/logout" class="nav-link"><i class='fas fa-user-times'></i> Log Out</a>
                     </li>
                 </ul>
             </div>
@@ -104,6 +104,12 @@
                                 $CommentPostID = $row['post_id'];
                                 // if(strlen($CommenterName)>10){ $CommenterName = substr($CommenterName,0,10).'...'; }
                                 // if(strlen($DateTime)>11){ $DateTime = substr($DateTime,0,11).'...'; }
+                                $sqlForSlug = "SELECT slug from post WHERE id = '$CommentPostID'";
+                                $resultForSlug = mysqli_query($conn, $sqlForSlug);
+                                if (mysqli_num_rows($resultForSlug) > 0){
+                                    $row = mysqli_fetch_assoc($resultForSlug);
+                                    $PostSlug = $row['slug'];
+                                }
                     ?>
                     <tbody>
                         <tr>
@@ -111,9 +117,9 @@
                             <td><?= $DateTime; ?></td>
                             <td><?= $CommenterName; ?></td>
                             <td><?= $CommentContent; ?></td>
-                            <td style="min-width:140px;"><a class="btn btn-success" href="approvecomment.php?id=<?= $CommentId; ?>">Approve</a></td>
-                            <td><a class="btn btn-danger" href="deletecomment.php?id=<?= $CommentId; ?>">Delete</a></td>
-                            <td style="min-width:140px;"><a class="btn btn-primary" href="fullpost.php?id=<?= $CommentPostID; ?>">Live Preview</a></td>
+                            <td style="min-width:140px;"><a class="btn btn-success" href="<?= $serverName; ?>/approvecomment?id=<?= $CommentId; ?>">Approve</a></td>
+                            <td><a class="btn btn-danger" href="<?= $serverName; ?>/deletecomment?id=<?= $CommentId; ?>">Delete</a></td>
+                            <td style="min-width:140px;"><a class="btn btn-primary" href="<?= $serverName; ?>/post/<?= $PostSlug; ?>">Live Preview</a></td>
                         </tr>
                     </tbody>
                     <?php
@@ -146,6 +152,12 @@
                                 $CommenterName = $row['name'];
                                 $CommentContent = $row['comment'];
                                 $CommentPostID = $row['post_id'];
+                                $sqlForSlug = "SELECT slug from post WHERE id = '$CommentPostID'";
+                                $resultForSlug = mysqli_query($conn, $sqlForSlug);
+                                if (mysqli_num_rows($resultForSlug) > 0){
+                                    $row = mysqli_fetch_assoc($resultForSlug);
+                                    $PostSlug = $row['slug'];
+                                }
                                 // if(strlen($CommenterName)>10){ $CommenterName = substr($CommenterName,0,10).'...'; }
                                 // if(strlen($DateTime)>11){ $DateTime = substr($DateTime,0,11).'...'; }
                     ?>
@@ -155,9 +167,9 @@
                             <td><?= $DateTime; ?></td>
                             <td><?= $CommenterName; ?></td>
                             <td><?= $CommentContent; ?></td>
-                            <td style="min-width:140px;"><a class="btn btn-warning" href="disapprovecomment.php?id=<?= $CommentId; ?>">Dis-Approve</a></td>
-                            <td><a class="btn btn-danger" href="deletecomment.php?id=<?= $CommentId; ?>">Delete</a></td>
-                            <td style="min-width:140px;"><a class="btn btn-primary" href="fullpost.php?id=<?= $CommentPostID; ?>">Live Preview</a></td>
+                            <td style="min-width:140px;"><a class="btn btn-warning" href="<?= $serverName; ?>/disapprovecomment?id=<?= $CommentId; ?>">Dis-Approve</a></td>
+                            <td><a class="btn btn-danger" href="<?= $serverName; ?>/deletecomment?id=<?= $CommentId; ?>">Delete</a></td>
+                            <td style="min-width:140px;"><a class="btn btn-primary" href="<?= $serverName; ?>/post/<?= $PostSlug; ?>">Live Preview</a></td>
                         </tr>
                     </tbody>
                     <?php

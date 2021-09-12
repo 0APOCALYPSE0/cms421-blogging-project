@@ -3,26 +3,32 @@
     require 'Includes/functions.php';
     require 'Includes/sessions.php';
 
-    $searchQryParam = $_GET['id'];
+    $searchQryParam = $_GET['slug'];
+    $sqlForId = "SELECT id, title FROM post Where slug='$searchQryParam'";
+    $resultForId = mysqli_query($conn, $sqlForId);
+    if (mysqli_num_rows($resultForId) > 0){
+        $row = mysqli_fetch_assoc($resultForId);
+        $postIdFromUrl = $row['id'];
+        $pageTitle = $row['title'];
+    }
     if(isset($_POST['Submit'])){
         $name = $_POST['commenterName'];
         $email = $_POST['commenterEmail'];
         $comment = $_POST['commenterThoughts'];
-        $postIdFromURL = $searchQryParam;
         date_default_timezone_set("Asia/Calcutta");
         $currentTime = time();
         $dateTime = strftime("%e %b %y %H:%M:%S", $currentTime);
 
         if(empty($name) || empty($email) || empty($comment)){
             $_SESSION['ErrorMessage'] = 'All fields must be filled out.';
-            Redirect_To("fullpost.php?id={$searchQryParam}");
+            Redirect_To($serverName."/post/{$searchQryParam}");
         }elseif(strlen($comment)>500){
             $_SESSION['ErrorMessage'] = 'Comment length should be less than 500 character.';
-            Redirect_To("fullpost.php?id={$searchQryParam}");
+            Redirect_To($serverName."/post/{$searchQryParam}");
         }else{
             $sql = "INSERT INTO comments(datetime, name, email, comment, approvedby, status, post_id) VALUES(?, ?, ?, ?, 'Pending', 'OFF', ?);";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssi", $dateTime, $name, $email, $comment, $searchQryParam);
+            $stmt->bind_param("ssssi", $dateTime, $name, $email, $comment, $postIdFromUrl);
             $execute = $stmt->execute();
             $last_id = $conn->insert_id;
             // $sql = "INSERT INTO category(title, author, datetime)";
@@ -35,10 +41,10 @@
             // $execute = $stmt->execute();
             if($execute){
                 $_SESSION['SuccessMessage'] = "Comment Added Successfully.";
-                Redirect_To("fullpost.php?id={$searchQryParam}");
+                Redirect_To($serverName."/post/{$searchQryParam}");
             }else{
                 $_SESSION['ErrorMessage'] = "Something went wrong. Try Again.";
-                Redirect_To("fullpost.php?id={$searchQryParam}");
+                Redirect_To($serverName."/post/{$searchQryParam}");
             }
         }
     }
@@ -52,31 +58,31 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
-    <title>Blog Page</title>
+    <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
+    <title><?= $pageTitle; ?> Page</title>
 </head>
 <body>
     <div style="height: 10px; background-color: #27aae1;"></div>
     <!-- Navbar  -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a href="#" class="navbar-brand">CMS Blogging</a>
+            <a href="<?= $serverName; ?>/index" class="navbar-brand">CMS Blogging</a>
             <button class="navbar-toggler" data-toggle='collapse' data-target='#navbarcollapseCMS'>
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapseCMS">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="index.php" class="nav-link">Home</a>
+                        <a href="<?= $serverName; ?>/index" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="about.php" class="nav-link">About Us</a>
+                        <a href="<?= $serverName; ?>/about" class="nav-link">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a href="blog.php" class="nav-link"> Blogs</a>
+                        <a href="<?= $serverName; ?>/blog/1" class="nav-link">Blogs</a>
                     </li>
                     <li class="nav-item">
-                        <a href="contact.php" class="nav-link">Contact Us</a>
+                        <a href="<?= $serverName; ?>/contact" class="nav-link">Contact Us</a>
                     </li>
                 </ul>
                 <?php
@@ -84,17 +90,17 @@
                 ?>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="logout.php" class="nav-link"><i class='fas fa-user-times'></i> Log Out</a>
+                        <a href="<?= $serverName; ?>/logout" class="nav-link"><i class='fas fa-user-times'></i> Log Out</a>
                     </li>
                 </ul>
                 <?php
                     }
                 ?>
                 <ul class="navbar-nav ml-auto">
-                    <form action="blog.php" class="form-inline d-none d-sm-block">
+                    <form action="<?= $serverName; ?>/blog" class="form-inline d-none d-sm-block">
                         <div class="form-group">
                             <input type="text" class="form-control mr-2" name='search' id='search' placeholder='Serach here...'>
-                            <button name='searchButton' class="btn btn-primary">Go</button>
+                            <button name='searchButton' class="btn btn-primary" type="submit">Go</button>
                         </div>
                     </form>
                 </ul>
@@ -109,25 +115,24 @@
         <div class="row mt-4">
             <!-- Main Area Start -->
             <div class="col-lg-8 col-md-12">
-                <h1>The Complete responsive CMS Blog</h1>
-                <h1 class="lead">The Complete blog by using php</h1>
+                <h1><?= $pageTitle; ?></h1>
                 <?php echo ErrorMessage(); echo SuccessMessage(); ?>
                 <?php
                     if(isset($_GET['searchButton'])){
                         $search = $_GET['search'];
                         $sql = "SELECT * FROM post WHERE datetime LIKE '%$search%' OR title LIKE '%$search%' OR category LIKE '%$search%' OR post LIKE '%$search%'";
                     }else{
-                        $PostIDFromURL = $_GET['id'];
-                        if(!isset($PostIDFromURL)){
+                        $PostSlugFromUrl = $_GET['slug'];
+                        if(!isset($PostSlugFromUrl)){
                             $_SESSION['ErrorMessage'] = "Bad Request !";
-                            Redirect_To('blog.php');
+                            Redirect_To($serverName."/blog/1");
                         }
-                        $sql = "SELECT * FROM post Where id='$PostIDFromURL'";
+                        $sql = "SELECT * FROM post Where slug='$PostSlugFromUrl'";
                     }
                     $result = mysqli_query($conn, $sql);
                     if(mysqli_num_rows($result)!=1){
                         $_SESSION['ErrorMessage'] = "Bad Request!";
-                        Redirect_To("blog.php?page=1");
+                        Redirect_To($serverName."/blog/1");
                     }
                     if (mysqli_num_rows($result) > 0){
                         while($row = mysqli_fetch_assoc($result)) {
@@ -140,10 +145,10 @@
                             $PostDescription = $row['post'];
                 ?>
                 <div class="card">
-                    <img src="Upload/<?= htmlentities($Image); ?>" alt="<?= $Image; ?>" class='img-fluid card-img-top' max-height='450px;'>
+                    <img src="<?= $uploadBaseURL ?>/<?= htmlentities($Image); ?>" title="<?= $pageTitle ?>" alt="<?= $Image; ?>" class='img-fluid card-img-top' max-height='450px;'>
                     <div class="card-body">
                         <h4 class="card-title"><?= htmlentities($PostTitle); ?></h4>
-                        <small class='text-muted'>Category: <span class="text-dark"><a href="blog.php?category=<?= $Category; ?>"><?= $Category; ?></a></span> & Written By <span class="text-dark"><a href="profile.php?username=<?= $Admin; ?>"><?= htmlentities($Admin); ?></a></span> On <span class="text-dark"><?= htmlentities($DateTime); ?></span></small>
+                        <small class='text-muted'>Category: <span class="text-dark"><a href="<?= $serverName; ?>/category/<?= $Category; ?>/1"><?= $Category; ?></a></span> & Written By <span class="text-dark"><a href="<?= $serverName; ?>/profile/<?= $Admin; ?>"><?= htmlentities($Admin); ?></a></span> On <span class="text-dark"><?= htmlentities($DateTime); ?></span></small>
                         <span style="float:right;" class="badge badge-dark text-light">Comments <?= approvedCommentsAccordingToPost($PostId); ?></span>
                         <hr>
                         <p class="card-text">
@@ -161,7 +166,7 @@
                 <span class="fieldInfo">Comments</span>
                 <br><br>
                 <?php
-                    $sql = "SELECT * FROM comments WHERE post_id = '$searchQryParam' AND status='ON'";
+                    $sql = "SELECT * FROM comments WHERE post_id = '$postIdFromUrl' AND status='ON'";
                     $result = mysqli_query($conn, $sql);
                     if (mysqli_num_rows($result) > 0){
                         while($row = mysqli_fetch_assoc($result)) {
@@ -171,7 +176,7 @@
                 ?>
                 <div>
                     <div class="media commentBlock">
-                            <img class="d-block img-fluid align-self-start" src="Images/comment.png" alt="">
+                            <img class="d-block img-fluid align-self-start" src="<?= $imagesBaseURL; ?>/comment.png" alt="">
                         <div class="media-body ml-2">
                             <h6 class="lead"><?= $commenterName; ?></h6>
                             <p class="small"><?= $commentDate; ?></p>
@@ -187,7 +192,7 @@
                 ?>
                 <!-- Fetching Existing Comments End -->
                 <div class=''>
-                    <form action="fullpost.php?id=<?= $searchQryParam; ?>" method="post">
+                    <form action="fullpost?id=<?= $searchQryParam; ?>" method="post">
                         <div class="card mb-3">
                             <div class="card-header">
                                 <h5 class="fieldInfo">Share your thoughts about this post.</h5>
@@ -227,7 +232,7 @@
             <div class="col-lg-4 col-md-12">
                 <div class="card mt-4">
                     <div class="card-body">
-                        <img src="Images/startblog.jpg" class="d-block img-fluid mb-3" alt="startblog.jpg">
+                        <img src="<?= $imagesBaseURL ?>/startblog.jpg" class="d-block img-fluid mb-3" alt="startblog.jpg">
                         <div class="text-center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi nobis ab magni, maxime assumenda asperiores magnam illo pariatur ipsam dolorem porro, saepe voluptatum, aut facere ullam totam perspiciatis aliquam! Cum.</div>
                     </div>
                 </div>
@@ -241,7 +246,7 @@
                     </div>
                     <div class="card-body">
                         <button type="button" class="btn btn-success btn-block text-center text-white mb-2" name="button">Join the Forum</button>
-                        <a href="login.php"><button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button></a>
+                        <a href="<?= $serverName; ?>/login"><button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button></a>
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="" value="" placeholder="Enter your email">
                             <div class="input-group-append">
@@ -267,7 +272,7 @@
                                     $categoryID = $row['id'];
                                     $categoryTitle = $row['title'];
                         ?>
-                        <a href="blog.php?category=<?= $categoryTitle; ?>"><span class="heading"><?= $categoryTitle; ?></span><br></a>
+                        <a href="<?= $serverName; ?>/category/<?= $categoryTitle; ?>/1"><span class="heading"><?= $categoryTitle; ?></span><br></a>
                         <?php
                                 }
                             }
@@ -286,14 +291,15 @@
                             if(mysqli_num_rows($result)>0){
                                 while($row = mysqli_fetch_assoc($result)){
                                     $postID = $row['id'];
+                                    $postSlug = $row['slug'];
                                     $postTitle = $row['title'];
                                     $datetime = $row['datetime'];
                                     $image = $row['image'];
                         ?>
                         <div class="media">
-                            <img src="Upload/<?= $image; ?>" class="d-block img-fluid align-self-start" width="94px;" height="94px;" alt="<?= $image; ?>">
+                            <img src="<?= $uploadBaseURL ?>/<?= $image; ?>" class="d-block img-fluid align-self-start" width="94px;" height="94px;" title="<?= $postTitle; ?>" alt="<?= $image; ?>">
                             <div class="media-body ml-2">
-                                <a href="fullpost.php?id=<?= $postID; ?>" target="_blank"><h6 class="lead"><?= $postTitle; ?></h6></a>
+                                <a href="<?= $serverName; ?>/post/<?= $postSlug; ?>" target="_blank"><h6 class="lead"><?= $postTitle; ?></h6></a>
                                 <p class="small"><?= $datetime; ?></p>
                             </div>
                         </div>

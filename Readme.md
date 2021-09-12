@@ -33,6 +33,7 @@ post:
   id: int, primary key, auto increament
   datetime: varchar(50)
   title: varchar(300)
+  slug: varchar(300)
   category: varchar(50)
   author: varchar(50)
   image: text

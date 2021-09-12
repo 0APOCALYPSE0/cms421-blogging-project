@@ -11,6 +11,5 @@
     // unset($_SESSION['adminName']);
     // session_destroy();
     // $_SESSION["SuccessMessage"] = "You are logged out successfully.";
-    Redirect_To("index.php");
-
+    Redirect_To($serverName."/index");
 ?>

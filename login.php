@@ -2,8 +2,9 @@
     require 'Includes/db.php';
     require 'Includes/functions.php';
     require 'Includes/sessions.php';
+
     if(isset($_SESSION['userID'])){
-        Redirect_To('dashboard.php');
+        Redirect_To($serverName."/dashboard");
     }
 
     if(isset($_POST['submit'])){
@@ -12,7 +13,7 @@
 
         if(empty($username) || empty($password)){
             $_SESSION['ErrorMessage'] = 'All fields must be filled out.';
-            Redirect_To("editpost.php");
+            Redirect_To($serverName."/editpost");
         }else{
             $foundAccount = loginAttempt($username, $password);
             if($foundAccount){
@@ -23,11 +24,11 @@
                 if(isset($_SESSION['trackingURL'])){
                     Redirect_To($_SESSION['trackingURL']);
                 }else{
-                    Redirect_To("dashboard.php");
+                    Redirect_To($serverName."/dashboard");
                 }
             }else{
                 $_SESSION['ErrorMessage'] = "Incorrect Username or Password.";
-                Redirect_To("login.php");
+                Redirect_To($serverName."/login");
             }
         }
     }
@@ -41,7 +42,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <title>Log In</title>
 </head>
 <body>
@@ -49,12 +50,12 @@
     <!-- Navbar  -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a href="#" class="navbar-brand">CMS Blogging</a>
+            <a href="<?= $serverName; ?>/index" class="navbar-brand">CMS Blogging</a>
             <button class="navbar-toggler" data-toggle='collapse' data-target='#navbarcollapseCMS'>
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-                
+
             </div>
         </div>
     </nav>
@@ -82,7 +83,7 @@
                         <h4>Welcome Back</h4>
                     </div>
                     <div class="card-body bg-dark">
-                        <form action="login.php" method="post">
+                        <form action="<?= $serverName; ?>/login" method="post">
                             <div class="form-group">
                                 <label for="username"><span class="fieldInfo">Username:</span></label>
                                 <div class="input-group mb-3">

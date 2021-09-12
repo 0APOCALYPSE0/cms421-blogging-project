@@ -14,7 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -22,37 +22,37 @@
     <!-- Navbar  -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a href="#" class="navbar-brand">CMS Blogging</a>
+            <a href="<?= $serverName; ?>/index" class="navbar-brand">CMS Blogging</a>
             <button class="navbar-toggler" data-toggle='collapse' data-target='#navbarcollapseCMS'>
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapseCMS">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="myprofile.php" class="nav-link"> <i class='fas fa-user'></i> My Profile</a>
+                        <a href="<?= $serverName; ?>/myprofile" class="nav-link"> <i class='fas fa-user'></i>My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="dashboard.php" class="nav-link">Dashboard</a>
+                        <a href="<?= $serverName; ?>/dashboard" class="nav-link">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="posts.php" class="nav-link">Posts</a>
+                        <a href="<?= $serverName; ?>/posts" class="nav-link">Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="categories.php" class="nav-link"> Categories</a>
+                        <a href="<?= $serverName; ?>/categories" class="nav-link">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a href="admin.php" class="nav-link">Manage Admins</a>
+                        <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
                     </li>
                     <li class="nav-item">
-                        <a href="comments.php" class="nav-link">Comments</a>
+                        <a href="<?= $serverName; ?>/comments" class="nav-link">Comments</a>
                     </li>
                     <li class="nav-item">
-                        <a href="blog.php?page=1" class="nav-link">Live Blog</a>
+                        <a href="<?= $serverName; ?>/blog/1" class="nav-link">Live Blog</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="logout.php" class="nav-link"><i class='fas fa-user-times'></i> Log Out</a>
+                        <a href="<?= $serverName; ?>/logout" class="nav-link"><i class='fas fa-user-times'></i> Log Out</a>
                     </li>
                 </ul>
             </div>
@@ -69,22 +69,22 @@
                     <h1><i class="fas fa-cog"></i> Dashboard</h1>
                 </div>
                 <div class="col-lg-3 mb-2">
-                    <a href="addnewpost.php" class='btn btn-primary btn-block'><i class='fas fa-edit'></i> Add New Post</a>
+                    <a href="<?= $serverName; ?>/addnewpost" class='btn btn-primary btn-block'><i class='fas fa-edit'></i> Add New Post</a>
                 </div>
                 <div class="col-lg-3 mb-2">
-                    <a href="categories.php" class='btn btn-info btn-block'><i class='fas fa-folder-plus'></i> Add New Category</a>
+                    <a href="<?= $serverName; ?>/categories" class='btn btn-info btn-block'><i class='fas fa-folder-plus'></i> Add New Category</a>
                 </div>
                 <div class="col-lg-3 mb-2">
-                    <a href="admin.php" class='btn btn-warning btn-block'><i class='fas fa-user-plus'></i> Add New Admin</a>
+                    <a href="<?= $serverName; ?>/admin" class='btn btn-warning btn-block'><i class='fas fa-user-plus'></i> Add New Admin</a>
                 </div>
                 <div class="col-lg-3 mb-2">
-                    <a href="comments.php" class='btn btn-success btn-block'><i class='fas fa-check'></i> Approve Comments</a>
+                    <a href="<?= $serverName; ?>/comments" class='btn btn-success btn-block'><i class='fas fa-check'></i> Approve Comments</a>
                 </div>
             </div>
         </div>
     </header>
     <!-- Header End -->
-    
+
     <!-- Main Area Start -->
     <section class="container py-2 mb-4">
         <?php echo ErrorMessage(); echo SuccessMessage(); ?>
@@ -155,6 +155,7 @@
                             while($row = mysqli_fetch_assoc($result)){
                                 $sr++;
                                 $PostId = $row['id'];
+                                $PostSlug = $row['slug'];
                                 $datetime = $row['datetime'];
                                 $Author = $row['author'];
                                 $Title = $row['title'];
@@ -174,7 +175,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a target="_blank" href="fullpost.php?id=<?= $PostId; ?>"><span class="btn btn-info">Preview</span></a>
+                                <a target="_blank" href="<?= $serverName; ?>/post/<?= $PostSlug; ?>"><span class="btn btn-info">Preview</span></a>
                             </td>
                         </tr>
                     </tbody>

@@ -1,5 +1,40 @@
 <?php
-    require 'db.php';
+    require_once 'db.php';
+
+    // $serverName = $_SERVER['SERVER_NAME'];
+    define("BASE_PATH", url());
+    $serverName = BASE_PATH;
+    $cssBaseURL = $serverName.'/css';
+    $imagesBaseURL = $serverName.'/Images';
+    $uploadBaseURL = $serverName.'/Upload';
+
+    function url(){
+        return sprintf(
+            "%s://%s%s",
+            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+            $_SERVER['SERVER_NAME'],
+            $_SERVER['SERVER_NAME'] != 'localhost' ? '' : '/CMS4.2.1'
+        );
+    }
+
+    function post_slug($vp_string){
+
+        $vp_string = trim($vp_string);
+
+        $vp_string = html_entity_decode($vp_string);
+
+        $vp_string = strip_tags($vp_string);
+
+        $vp_string = strtolower($vp_string);
+
+        $vp_string = preg_replace('~[^ a-z0-9_.]~', ' ', $vp_string);
+
+        $vp_string = preg_replace('~ ~', '-', $vp_string);
+
+        $vp_string = preg_replace('~-+~', '-', $vp_string);
+
+        return $vp_string;
+    }
 
     function Redirect_To($newLocation){
         header('Location:'.$newLocation);
@@ -33,7 +68,7 @@
             return true;
         }else{
             $_SESSION['ErrorMessage'] = "Login Required!";
-            Redirect_To("login.php");
+            Redirect_To("login");
         }
     }
 

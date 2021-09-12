@@ -15,7 +15,7 @@
         }
     }else{
         $_SESSION['ErrorMessage'] = "Bad Request!";
-        Redirect_To("blog.php?page=1");
+        Redirect_To($serverName."/blog/1");
     }
 ?>
 
@@ -27,7 +27,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <title>Profile</title>
 </head>
 <body>
@@ -35,33 +35,33 @@
     <!-- Navbar  -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a href="#" class="navbar-brand">CMS Blogging</a>
+            <a href="<?= $serverName; ?>/index" class="navbar-brand">CMS Blogging</a>
             <button class="navbar-toggler" data-toggle='collapse' data-target='#navbarcollapseCMS'>
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapseCMS">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="blog.php" class="nav-link">Home</a>
+                        <a href="<?= $serverName; ?>/index" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">About Us</a>
+                        <a href="<?= $serverName; ?>/about" class="nav-link">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a href="blog.php" class="nav-link"> Blog</a>
+                        <a href="<?= $serverName; ?>/blog/1" class="nav-link">Blogs</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Contact Us</a>
+                        <a href="<?= $serverName; ?>/contact" class="nav-link">Contact Us</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Feature</a>
+                        <a href="feature" class="nav-link">Feature</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    <form action="blog.php" class="form-inline d-none d-sm-block">
+                    <form action="blog" class="form-inline d-none d-sm-block">
                         <div class="form-group">
                             <input type="text" class="form-control mr-2" name='search' id='search' placeholder='Serach here...'>
-                            <button name='searchButton' class="btn btn-primary">Go</button>
+                            <button name='searchButton' class="btn btn-primary" type="submit">Go</button>
                         </div>
                     </form>
                 </ul>
@@ -87,7 +87,7 @@
     <div class="container py-2 mb-4">
         <div class="row">
             <div class="col-md-3">
-                <img src="Images/<?= $image; ?>" alt="<?= $image; ?>" class="d-block img-fluid mb-3 rounded-circle">
+                <img src="<?= $imagesBaseURL; ?>/<?= $image; ?>" alt="<?= $image; ?>" class="d-block img-fluid mb-3 rounded-circle">
             </div>
             <div class="col-md-9" style="min-height:400px;">
                 <div class="card">

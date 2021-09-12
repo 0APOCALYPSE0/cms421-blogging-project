@@ -1,0 +1,21 @@
+RewriteEngine On
+
+## Forcing http request to https request
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+## Removing category query param for making url seo friendly
+RewriteRule ^category/(.*)/(.*)$ blog.php?category=$1&page=$2
+RewriteRule ^blog/(.*)$ blog.php?page=$1
+RewriteRule ^post/(.*)$ fullpost.php?slug=$1
+RewriteRule ^profile/(.*)$ profile.php?username=$1
+
+## Redirects example.com/cool-page.php to example.com/cool-page
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+## Redirects the index.php file to the root domain
+RewriteRule ^index.php$ https://blogging.lovestoblog.com/ [R=301,L]
+RewriteRule ^sitemap.xml/?$ sitemap.php

@@ -2,7 +2,7 @@
     require 'Includes/db.php';
     require 'Includes/functions.php';
     require 'Includes/sessions.php';
-    
+
     if(isset($_GET['id'])){
         $searchQryParam = $_GET['id'];
         $admin = $_SESSION['adminName'];
@@ -11,10 +11,10 @@
         echo $execute;
         if($execute){
             $_SESSION['SuccessMessage'] = "Category Deleted Successfully";
-            Redirect_To("categories.php");
+            Redirect_To($serverName."/categories");
         }else{
             $_SESSION['ErrorMessage'] = "Something went wrong. Try again...";
-            Redirect_To("categories.php");
+            Redirect_To($serverName."/categories");
         }
     }
 

@@ -1,3 +1,7 @@
+<?php
+    require 'Includes/functions.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <script src="https://kit.fontawesome.com/a977020c47.js" crossorigin="anonymous"></script>
     <title>Contact</title>
 </head>
@@ -15,23 +19,23 @@
     <!-- Navbar  -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a href="#" class="navbar-brand">CMS Blogging</a>
+            <a href="<?= $serverName; ?>/index" class="navbar-brand">CMS Blogging</a>
             <button class="navbar-toggler" data-toggle='collapse' data-target='#navbarcollapseCMS'>
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapseCMS">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a href="index.php" class="nav-link">Home <span class="sr-only">(current)</span></a>
+                        <a href="<?= $serverName; ?>/index" class="nav-link">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="about.php" class="nav-link">About Us</a>
+                        <a href="<?= $serverName; ?>/about" class="nav-link">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a href="blog.php" class="nav-link"> Blogs</a>
+                        <a href="<?= $serverName; ?>/blog/1" class="nav-link">Blogs</a>
                     </li>
                     <li class="nav-item">
-                        <a href="contact.php" class="nav-link">Contact Us</a>
+                        <a href="<?= $serverName; ?>/contact" class="nav-link">Contact Us</a>
                     </li>
                 </ul>
             </div>
@@ -41,7 +45,7 @@
     <div style="height: 10px; background-color: #27aae1;"></div>
 
     <!-- Main Area Start -->
-    <div class="jumbotron" style="background-image: url('Images/about.jpg'); repeat:no-repeat; background-size:cover;">
+    <div class="jumbotron" style="background-image: url('<?= $imagesBaseURL; ?>/about.jpg'); repeat:no-repeat; background-size:cover;">
         <h1 class="display-3 text-center">Contact Us</h1>
         <p class="lead text-center">Contact us at out mail id <strong>giriaakash00@gmail.com</strong>.</p>
     </div>

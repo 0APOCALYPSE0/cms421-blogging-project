@@ -22,36 +22,36 @@
         $headline = $_POST['headline'];
         $image = $_FILES['image']['name'];
         $bio = $_POST['bio'];
-        $target = "Images/".basename($_FILES['image']['name']);
+        $target = "<?= $imagesBaseURL; ?>/".basename($_FILES['image']['name']);
 
         if(strlen($headline)>30){
             $_SESSION['ErrorMessage'] = 'Headline should be less than 30 characters.';
-            Redirect_To("myprofile.php");
+            Redirect_To($serverName."/myprofile");
         }elseif(strlen($bio)>499){
             $_SESSION['ErrorMessage'] = 'Bio should be less than 500 character.';
-            Redirect_To("myprofile.php");
+            Redirect_To($serverName."/myprofile");
         }else{
             if(!empty($_FILES['image']['name'])){
                 $sql = "UPDATE admins SET aname='$AdminName', headline='$headline', image='$image', bio='$bio' WHERE id='$AdminId' ";
             }else{
                 $sql = "UPDATE admins SET aname='$AdminName', headline='$headline', bio='$bio' WHERE id='$AdminId' ";
-            } 
+            }
             $execute = mysqli_query($conn, $sql);
             move_uploaded_file($_FILES['image']['tmp_name'], $target);
             // $sql = "INSERT INTO category(title, author, datetime)";
             // $sql .= "VALUES(:categoryName, :adminName, :datetime);";
             // $stmt = $conn->prepare($sql);
-            
+
             // $stmt->bindValue(':categoryName', $category);
             // $stmt->bindValue(':adminName', $admin);
             // $stmt->bindValue(':datetime', $dateTime);
             // $execute = $stmt->execute();
             if($execute){
                 $_SESSION['SuccessMessage'] = "Profile Updated Successfully.";
-                Redirect_To("myprofile.php");
+                Redirect_To($serverName."/myprofile");
             }else{
                 $_SESSION['ErrorMessage'] = "Something went wrong. Try Again.";
-                Redirect_To("myprofile.php");
+                Redirect_To($serverName."/myprofile");
             }
         }
     }
@@ -65,7 +65,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <title>My Profile</title>
 </head>
 <body>
@@ -73,37 +73,37 @@
     <!-- Navbar  -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a href="#" class="navbar-brand">CMS Blogging</a>
+            <a href="<?= $serverName; ?>/index" class="navbar-brand">CMS Blogging</a>
             <button class="navbar-toggler" data-toggle='collapse' data-target='#navbarcollapseCMS'>
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapseCMS">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="myprofile.php" class="nav-link"> <i class='fas fa-user'></i> My Profile</a>
+                        <a href="<?= $serverName; ?>/myprofile" class="nav-link"> <i class='fas fa-user'></i>My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="dashboard.php" class="nav-link">Dashboard</a>
+                        <a href="<?= $serverName; ?>/dashboard" class="nav-link">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="posts.php" class="nav-link">Posts</a>
+                        <a href="<?= $serverName; ?>/posts" class="nav-link">Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="categories.php" class="nav-link"> Categories</a>
+                        <a href="<?= $serverName; ?>/categories" class="nav-link">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a href="admin.php" class="nav-link">Manage Admins</a>
+                        <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
                     </li>
                     <li class="nav-item">
-                        <a href="comments.php" class="nav-link">Comments</a>
+                        <a href="<?= $serverName; ?>/comments" class="nav-link">Comments</a>
                     </li>
                     <li class="nav-item">
-                        <a href="blog.php?page=1" class="nav-link">Live Blog</a>
+                        <a href="<?= $serverName; ?>/blog/1" class="nav-link">Live Blog</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="logout.php" class="nav-link"><i class='fas fa-user-times'></i> Log Out</a>
+                        <a href="<?= $serverName; ?>/logout" class="nav-link"><i class='fas fa-user-times'></i> Log Out</a>
                     </li>
                 </ul>
             </div>
@@ -124,7 +124,7 @@
         </div>
     </header>
     <!-- Header End -->
-    
+
     <!-- Main Area Start -->
     <section class="container py-2 mb-4">
         <div class="row">
@@ -135,7 +135,7 @@
                         <h3><?= $existingName; ?></h3>
                     </div>
                     <div class="card-body">
-                        <img src="Images/<?= $existingImage; ?>" alt="<?= $existingImage; ?>" class="block img-fluid mb-3">
+                        <img src="<?= $imagesBaseURL; ?>/<?= $existingImage; ?>" alt="<?= $existingImage; ?>" class="block img-fluid mb-3">
                         <div><?= $existingBio; ?></div>
                     </div>
                 </div>
@@ -144,7 +144,7 @@
             <!-- Right Area Start -->
             <div class="col-md-9" style="min-height: 400px;">
                 <?php echo ErrorMessage(); echo SuccessMessage(); ?>
-                <form action="myprofile.php" method='post' enctype="multipart/form-data">
+                <form action="<?= $serverName; ?>/myprofile" method='post' enctype="multipart/form-data">
                     <div class="card bg-secondary text-light mb-3">
                         <div class="card-header bg-secondary text-light">
                             <h4>Edit Profile</h4>
@@ -170,7 +170,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-6 mb-2">
-                                    <a href="Dashboard.php" class='btn btn-warning btn-block'><i class='fas fa-arrow-left'></i> Back To Dashboard</a>
+                                    <a href="<?= $serverName; ?>/dashboard" class='btn btn-warning btn-block'><i class='fas fa-arrow-left'></i> Back To Dashboard</a>
                                 </div>
                                 <div class="col-lg-6 mb-2">
                                     <button class='btn btn-success btn-block' type='submit' name='submit'><i class='fas fa-check'></i> Publish</button>
