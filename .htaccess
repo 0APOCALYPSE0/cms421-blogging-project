@@ -18,4 +18,4 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 
 ## Redirects the index.php file to the root domain
 RewriteRule ^index.php$ https://blogging.lovestoblog.com/ [R=301,L]
-RewriteRule ^sitemap.xml/?$ sitemap.php
+RewriteRule ^sitemap.xml$ sitemap.php
