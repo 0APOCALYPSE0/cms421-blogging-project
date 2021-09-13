@@ -4,12 +4,14 @@
     require 'Includes/sessions.php';
 
     $searchQryParam = $_GET['slug'];
-    $sqlForId = "SELECT id, title FROM post Where slug='$searchQryParam'";
+    $sqlForId = "SELECT id, title, post, category FROM post Where slug='$searchQryParam'";
     $resultForId = mysqli_query($conn, $sqlForId);
     if (mysqli_num_rows($resultForId) > 0){
         $row = mysqli_fetch_assoc($resultForId);
         $postIdFromUrl = $row['id'];
         $pageTitle = $row['title'];
+        $pageDescription = $row['post'];
+        $pageCategory = $row['category'];
     }
     if(isset($_POST['Submit'])){
         $name = $_POST['commenterName'];
@@ -56,6 +58,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="<?=strip_tags(substr($pageDescription, 0, 200)); ?>">
+    <meta name="keywords" content="<?= $pageCategory; ?>" >
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
