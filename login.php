@@ -37,6 +37,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G3QB45L9DK"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-G3QB45L9DK');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -55,7 +64,20 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a href="<?= $serverName; ?>/index" class="nav-link">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= $serverName; ?>/about" class="nav-link">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= $serverName; ?>/blog/1" class="nav-link">Blogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= $serverName; ?>/contact" class="nav-link">Contact Us</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
