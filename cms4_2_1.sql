@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 13, 2021 at 10:27 AM
+-- Generation Time: Sep 14, 2021 at 05:25 PM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.3.11
 
@@ -111,21 +111,23 @@ CREATE TABLE `post` (
   `datetime` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `title` varchar(300) COLLATE utf8_unicode_ci NOT NULL,
   `slug` varchar(300) COLLATE utf8_unicode_ci NOT NULL,
+  `tags` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `category` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `author` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `image` text COLLATE utf8_unicode_ci NOT NULL,
-  `post` text COLLATE utf8_unicode_ci NOT NULL
+  `post` text COLLATE utf8_unicode_ci NOT NULL,
+  `status` varchar(50) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `post`
 --
 
-INSERT INTO `post` (`id`, `datetime`, `title`, `slug`, `category`, `author`, `image`, `post`) VALUES
-(1, '13 Sep 21 02:00:30', 'What is Blockchain', 'what-is-blockchain', 'Technology', 'Aakash', 'blockchain.png', '<p>The blockchain is an undeniably ingenious invention &ndash; the brainchild of a person or group of people known by the pseudonym, Satoshi Nakamoto. But since then, it has evolved into something greater, and the main question every single person is asking is: What is Blockchain?</p>\r\n\r\n<p>By allowing digital information to be distributed but not copied, blockchain technology created the backbone of a new type of internet. Originally devised for the&nbsp;<strong><a href=\"https://blockgeeks.com/guides/what-is-cryptocurrency/\">digital currency</a>,&nbsp;<a href=\"https://blockgeeks.com/guides/what-is-bitcoin/\">Bitcoin</a>, (<a href=\"https://bitbuy.ca/?ref=40H9UH4AXZ\" target=\"_blank\">Buy Bitcoin</a></strong>) the tech community has now found other potential uses for the technology.</p>\r\n\r\n<p>In this guide, we are going to explain to you what the blockchain technology is, and what its properties are what make it so unique. So, we hope you enjoy this, What Is Blockchain Guide. And if you already know what blockchain is and want to become a blockchain developer please check out our in-depth&nbsp;<strong><a href=\"https://blockgeeks.com/guides/blockchain-developer/\">blockchain tutorial</a>&nbsp;</strong>and create your very first blockchain.</p>\r\n'),
-(2, '19 Jan 20 18:19:54', 'Introduction to Object Detection', 'introduction-to-object-detection', 'Technology', 'aakash', 'object-detection.jpg', '<p>Humans can easily detect and identify objects present in an image. The human visual system is fast and accurate and can perform complex tasks like identifying multiple objects and detect obstacles with little conscious thought. With the availability of large amounts of data, faster GPUs, and better algorithms, we can now easily train computers to detect and classify multiple objects within an image with high accuracy. In this blog, we will explore terms such as object detection, object localization, loss function for object detection and localization, and finally explore an object detection algorithm known as &ldquo;You only look once&rdquo; (YOLO).</p>\r\n\r\n<h2><strong>Object Localization</strong></h2>\r\n\r\n<p>An image classification or image recognition model simply detect the probability of an object in an image. In contrast to this, object localization refers to identifying the location of an object in the image. An object localization algorithm will output the coordinates of the location of an object with respect to the image. In computer vision, the most popular way to localize an object in an image is to represent its location with the help of bounding boxes. Fig. 1 shows an example of a bounding box.</p>\r\n'),
-(3, '13 Sep 21 01:47:52', 'Beautiful Montreal', 'beautiful-montreal', 'Travel', 'aakash', 'old_montreal2.jpg', '<p><a href=\"https://www.nomadicmatt.com/travel-guides/canada-travel-tips/montreal/\" target=\"_blank\">Montreal</a>&nbsp;is one of the world&rsquo;s best cities (at least in my opinion). From its lovely parks and historic downtown to its incredible music, art, and foodie scenes, Montreal is amazing.</p>\r\n\r\n<p>It also has robust hostel offerings, with dozens to choose from. In my visits to the city, I&rsquo;ve stayed at numerous hostels but always come back to my favorites listed below. To me, these are the best!</p>\r\n'),
-(4, '13 Sep 21 01:56:45', 'Tasty Pasta Recipie', 'tasty-pasta-recipie', 'Food', 'aakash', 'dinner.jpg', '<p>Do you ever have nights when you just can&rsquo;t seem to think of any easy dinner ideas? When you feel like you&rsquo;ve rotated through all your standbys, and nothing sounds good? If you do, you&rsquo;re in the right place. Below, you&rsquo;ll find over 50 healthy dinner ideas that are perfect for busy weeknights. All of these dinner recipes are quick and easy to make, but still full of flavor. They&rsquo;re ones we&rsquo;ve enjoyed time and time again, even on nights when we&rsquo;re tired, crunched for time, or not in the mood to cook.</p>\r\n\r\n<p>But before we get to the recipes, I want to talk strategy. On busy nights, knowing a few simple methods for getting a quick and easy dinner on the table can really pay off.</p>\r\n');
+INSERT INTO `post` (`id`, `datetime`, `title`, `slug`, `tags`, `category`, `author`, `image`, `post`, `status`) VALUES
+(1, '14 Sep 21 19:23:26', 'What is Blockchain', 'what-is-blockchain', 'Blockchain, Crypto Currency, Bit Coins', 'Technology', 'Aakash', 'blockchain.png', '<p>The blockchain is an undeniably ingenious invention &ndash; the brainchild of a person or group of people known by the pseudonym, Satoshi Nakamoto. But since then, it has evolved into something greater, and the main question every single person is asking is: What is Blockchain?</p>\r\n\r\n<p>By allowing digital information to be distributed but not copied, blockchain technology created the backbone of a new type of internet. Originally devised for the&nbsp;<strong><a href=\"https://blockgeeks.com/guides/what-is-cryptocurrency/\">digital currency</a>,&nbsp;<a href=\"https://blockgeeks.com/guides/what-is-bitcoin/\">Bitcoin</a>, (<a href=\"https://bitbuy.ca/?ref=40H9UH4AXZ\" target=\"_blank\">Buy Bitcoin</a></strong>) the tech community has now found other potential uses for the technology.</p>\r\n\r\n<p>In this guide, we are going to explain to you what the blockchain technology is, and what its properties are what make it so unique. So, we hope you enjoy this, What Is Blockchain Guide. And if you already know what blockchain is and want to become a blockchain developer please check out our in-depth&nbsp;<strong><a href=\"https://blockgeeks.com/guides/blockchain-developer/\">blockchain tutorial</a>&nbsp;</strong>and create your very first blockchain.</p>\r\n', 'publish'),
+(2, '14 Sep 21 19:23:04', 'Introduction to Object Detection', 'introduction-to-object-detection', 'AI, Machine Learning, Data Science, Object Detection', 'Technology', 'aakash', 'object-detection.jpg', '<p>Humans can easily detect and identify objects present in an image. The human visual system is fast and accurate and can perform complex tasks like identifying multiple objects and detect obstacles with little conscious thought. With the availability of large amounts of data, faster GPUs, and better algorithms, we can now easily train computers to detect and classify multiple objects within an image with high accuracy. In this blog, we will explore terms such as object detection, object localization, loss function for object detection and localization, and finally explore an object detection algorithm known as &ldquo;You only look once&rdquo; (YOLO).</p>\r\n\r\n<h2><strong>Object Localization</strong></h2>\r\n\r\n<p>An image classification or image recognition model simply detect the probability of an object in an image. In contrast to this, object localization refers to identifying the location of an object in the image. An object localization algorithm will output the coordinates of the location of an object with respect to the image. In computer vision, the most popular way to localize an object in an image is to represent its location with the help of bounding boxes. Fig. 1 shows an example of a bounding box.</p>\r\n', 'publish'),
+(3, '14 Sep 21 19:24:16', 'Beautiful Montreal', 'beautiful-montreal', 'Travel Blog, Montreal, World Tour', 'Travel', 'aakash', 'old_montreal2.jpg', '<p><a href=\"https://www.nomadicmatt.com/travel-guides/canada-travel-tips/montreal/\" target=\"_blank\">Montreal</a>&nbsp;is one of the world&rsquo;s best cities (at least in my opinion). From its lovely parks and historic downtown to its incredible music, art, and foodie scenes, Montreal is amazing.</p>\r\n\r\n<p>It also has robust hostel offerings, with dozens to choose from. In my visits to the city, I&rsquo;ve stayed at numerous hostels but always come back to my favorites listed below. To me, these are the best!</p>\r\n', 'publish'),
+(4, '14 Sep 21 19:24:40', 'Tasty Pasta Recipie', 'tasty-pasta-recipie', 'Food, Cooking, Pasta, Recipies', 'Food', 'aakash', 'dinner.jpg', '<p>Do you ever have nights when you just can&rsquo;t seem to think of any easy dinner ideas? When you feel like you&rsquo;ve rotated through all your standbys, and nothing sounds good? If you do, you&rsquo;re in the right place. Below, you&rsquo;ll find over 50 healthy dinner ideas that are perfect for busy weeknights. All of these dinner recipes are quick and easy to make, but still full of flavor. They&rsquo;re ones we&rsquo;ve enjoyed time and time again, even on nights when we&rsquo;re tired, crunched for time, or not in the mood to cook.</p>\r\n\r\n<p>But before we get to the recipes, I want to talk strategy. On busy nights, knowing a few simple methods for getting a quick and easy dinner on the table can really pay off.</p>\r\n', 'publish');
 
 --
 -- Indexes for dumped tables
@@ -176,13 +178,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables

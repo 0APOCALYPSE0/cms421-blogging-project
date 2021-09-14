@@ -34,7 +34,9 @@ post:
   datetime: varchar(50)
   title: varchar(300)
   slug: varchar(300)
+  tags: varchar(500)
   category: varchar(50)
   author: varchar(50)
   image: text
   post: text
+  status: varchar(50)
