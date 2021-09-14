@@ -105,7 +105,7 @@
     <!-- Carousel End -->
 
     <!-- Header Start -->
-    <div class="m-auto main">
+    <div class="m-auto main container-fluid">
         <div class="row mt-4">
             <!-- Main Area Start -->
             <div class="col-lg-8 col-md-12">

@@ -125,7 +125,7 @@
     <div style="height: 10px; background-color: #27aae1;"></div>
 
     <!-- Header Start -->
-    <div class="main m-auto">
+    <div class="main m-auto container-fluid">
         <div class="row mt-4">
             <!-- Main Area Start -->
             <div class="col-lg-8 col-md-12">
