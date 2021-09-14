@@ -7,7 +7,7 @@ $pages = mysqli_query($conn, 'SELECT * FROM post ORDER BY id ASC');
 $article = mysqli_query($conn, 'SELECT slug FROM post ORDER BY id ASC');
 $category = mysqli_query($conn, 'SELECT title FROM category ORDER BY id ASC');
 $profile= mysqli_query($conn, 'SELECT username FROM admins ORDER BY id ASC');
-$date = date("Y-m-d h:i:sa", time());
+$date = date("c", time());
 
 
 //define your base URLs

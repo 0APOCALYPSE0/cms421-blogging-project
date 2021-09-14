@@ -4,7 +4,7 @@
     require 'Includes/sessions.php';
 
     $searchQryParam = $_GET['slug'];
-    $sqlForId = "SELECT id, title, post, category FROM post Where slug='$searchQryParam'";
+    $sqlForId = "SELECT id, title, post, category, tags FROM post Where slug='$searchQryParam'";
     $resultForId = mysqli_query($conn, $sqlForId);
     if (mysqli_num_rows($resultForId) > 0){
         $row = mysqli_fetch_assoc($resultForId);
@@ -12,6 +12,7 @@
         $pageTitle = $row['title'];
         $pageDescription = $row['post'];
         $pageCategory = $row['category'];
+        $pageTags = $row['tags'];
     }
     if(isset($_POST['Submit'])){
         $name = $_POST['commenterName'];
@@ -68,8 +69,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="<?=strip_tags(substr($pageDescription, 0, 200)); ?>">
-    <meta name="keywords" content="<?= $pageCategory; ?>" >
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+    <meta name="keywords" content="<?= $pageCategory; ?>, <?= $pageTags; ?>" >
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <title><?= $pageTitle; ?> Page</title>
@@ -128,7 +129,7 @@
         <div class="row mt-4">
             <!-- Main Area Start -->
             <div class="col-lg-8 col-md-12">
-                <h1><?= $pageTitle; ?></h1>
+                <h1 class="px-3"><?= $pageTitle; ?></h1>
                 <?php echo ErrorMessage(); echo SuccessMessage(); ?>
                 <?php
                     if(isset($_GET['searchButton'])){
@@ -152,6 +153,7 @@
                             $PostId = $row['id'];
                             $DateTime = $row['datetime'];
                             $PostTitle = $row['title'];
+                            $PostTags = $row['tags'];
                             $Category = $row['category'];
                             $Admin = $row['author'];
                             $Image = $row['image'];
@@ -163,6 +165,13 @@
                         <h4 class="card-title"><?= htmlentities($PostTitle); ?></h4>
                         <small class='text-muted'>Category: <span class="text-dark"><a href="<?= $serverName; ?>/category/<?= $Category; ?>/1"><?= $Category; ?></a></span> & Written By <span class="text-dark"><a href="<?= $serverName; ?>/profile/<?= $Admin; ?>"><?= htmlentities($Admin); ?></a></span> On <span class="text-dark"><?= htmlentities($DateTime); ?></span></small>
                         <span style="float:right;" class="badge badge-dark text-light">Comments <?= approvedCommentsAccordingToPost($PostId); ?></span>
+                        <?php
+                            if(strlen($PostTags) != 0){
+                        ?>
+                            <div class="my-1">
+                                <span><i class="fas fa-tags"></i> <?= $PostTags; ?></span>
+                            </div>
+                        <?php } ?>
                         <hr>
                         <p class="card-text">
                         <?php echo nl2br($PostDescription); ?>
@@ -205,7 +214,7 @@
                 ?>
                 <!-- Fetching Existing Comments End -->
                 <div class=''>
-                    <form action="fullpost?id=<?= $searchQryParam; ?>" method="post">
+                    <form action="<?= $serverName; ?>/post/<?= $searchQryParam; ?>" method="post">
                         <div class="card mb-3">
                             <div class="card-header">
                                 <h5 class="fieldInfo">Share your thoughts about this post.</h5>
@@ -299,7 +308,7 @@
                     </div>
                     <div class="card-body">
                         <?php
-                            $sql = "SELECT * FROM post ORDER BY id DESC LIMIT 0,5";
+                            $sql = "SELECT * FROM post WHERE status = 'publish' ORDER BY id DESC LIMIT 0,5";
                             $result = mysqli_query($conn, $sql);
                             if(mysqli_num_rows($result)>0){
                                 while($row = mysqli_fetch_assoc($result)){

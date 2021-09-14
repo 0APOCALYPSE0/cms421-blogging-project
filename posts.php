@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <title>Posts</title>
@@ -101,6 +101,7 @@
                             <th>Banner</th>
                             <th>Comments</th>
                             <th>Action</th>
+                            <th>Status</th>
                             <th>Live Preview</th>
                         </tr>
                     </thead>
@@ -119,6 +120,7 @@
                                 $Admin = $row['author'];
                                 $Image = $row['image'];
                                 $PostDescription = $row['post'];
+                                $PostStatus = $row['status'];
                     ?>
                     <tbody>
                         <tr>
@@ -157,9 +159,10 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="<?= $serverName; ?>/editpost?id=<?= $Id; ?>"><span class='btn btn-sm btn-warning mb-2'>Edit</span></a>
-                                <a href="<?= $serverName; ?>/deletepost?id=<?= $Id; ?>"><span class='btn btn-sm btn-danger mb-2'>Delete</span></a>
+                                <a href="<?= $serverName; ?>/editpost?id=<?= $Id; ?>"><span class='btn btn-sm btn-warning mb-2'><i class="far fa-edit" ></i></span></a>
+                                <a href="<?= $serverName; ?>/deletepost?id=<?= $Id; ?>"><span class='btn btn-sm btn-danger mb-2'><i class="fas fa-trash-alt"></i></span></a>
                             </td>
+                            <td class="text-center"><a href="<?= $serverName; ?>/togglestatus.php?id=<?= $Id; ?>&status=<?= $PostStatus; ?>"><i class="fad fa-2x fa-toggle-<?= $PostStatus == 'publish' ? 'on' : 'off'; ?> text-<?= $PostStatus == 'publish' ? 'success' : 'danger'; ?>"></i></a></td>
                             <td><a href="<?= $serverName; ?>/post/<?= $PostSlug; ?>" target='_blank'><span class='btn btn-sm btn-primary'>Live Preview</span></a></td>
                         </tr>
                     </tbody>

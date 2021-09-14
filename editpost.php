@@ -7,14 +7,17 @@
     if(isset($_POST['submit'])){
         $postTitle = $_POST['postTitle'];
         $postSlug = $_POST['postSlug'] == '' ? post_slug($_POST['postTitle']) : $_POST['postSlug'];
+        $postTags = $_POST['postTags'];
         $category = $_POST['category'];
         $image = $_FILES['image']['name'];
         $postDescription = $_POST['postDescription'];
-        $target = "<?= $uploadBaseURL; ?>/".basename($_FILES['image']['name']);
+        $target = "Upload/".basename($_FILES['image']['name']);
         $admin = "Aakash";
         date_default_timezone_set("Asia/Calcutta");
         $currentTime = time();
         $dateTime = strftime("%e %b %y %H:%M:%S", $currentTime);
+        echo $postSlug;
+        echo $postTags;
         $num = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM post WHERE slug = '$postSlug' "));
         $postSlug = $num <= 1 ? $postSlug : $postSlug.'-'.$num-1;
         if(empty($postTitle)){
@@ -28,9 +31,9 @@
             Redirect_To($serverName."/editpost?id=".$searchQryParam);
         }else{
             if(!empty($_FILES['image']['name'])){
-                $sql = "UPDATE post SET title='$postTitle', slug='$postSlug', category='$category', image='$image', post='$postDescription', datetime='$dateTime' WHERE id='$searchQryParam' ";
+                $sql = "UPDATE post SET title='$postTitle', slug='$postSlug', tags='$postTags', category='$category', image='$image', post='$postDescription', datetime='$dateTime' WHERE id='$searchQryParam' ";
             }else{
-                $sql = "UPDATE post SET title='$postTitle', slug='$postSlug', category='$category', post='$postDescription', datetime='$dateTime' WHERE id='$searchQryParam' ";
+                $sql = "UPDATE post SET title='$postTitle', slug='$postSlug', tags='$postTags', category='$category', post='$postDescription', datetime='$dateTime' WHERE id='$searchQryParam' ";
             }
             $execute = mysqli_query($conn, $sql);
             move_uploaded_file($_FILES['image']['tmp_name'], $target);
@@ -59,7 +62,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
@@ -136,6 +139,7 @@
                             $PostId = $row['id'];
                             $DateTime = $row['datetime'];
                             $PostTitle = $row['title'];
+                            $PostTags = $row['tags'];
                             $PostSlug = $row['slug'];
                             $Category = $row['category'];
                             $Admin = $row['author'];
@@ -157,6 +161,10 @@
                             <div class="form-group">
                                 <label for="postSlug"><span class="fieldInfo">Post Slug</span></label>
                                 <input type="text" name='postSlug' class="form-control" id='postSlug' value='<?= $PostSlug; ?>' placeholder='Enter post slug'>
+                            </div>
+                            <div class="form-group">
+                                <label for="postTags"><span class="fieldInfo">Post Tags</span></label>
+                                <input type="text" name='postTags' class="form-control" id='postTags' value='<?= $PostTags; ?>' placeholder='Enter post tags'>
                             </div>
                             <div class="form-group">
                                 <span class='fieldInfo'>Existing Category</span>

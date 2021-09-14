@@ -25,7 +25,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="<?= $category; ?> Blog">
     <meta name="keywords" content="<?= $category; ?>">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <title><?= $category; ?> Blog Page</title>
@@ -94,7 +94,7 @@
         <div class="row mt-4">
             <!-- Main Area Start -->
             <div class="col-lg-8 col-md-12">
-                <h1>Latest Popular Blogs <?= $category != '' ? 'on '.$category : ''; ?></h1>
+                <h1 class="px-3">Latest Popular Blogs <?= $category != '' ? 'on '.$category : ''; ?></h1>
                 <?php echo ErrorMessage(); echo SuccessMessage(); ?>
                 <?php
                     $showPostFrom = 0;
@@ -108,7 +108,7 @@
                     }
                     if(isset($_GET['searchButton'])){
                         $search = $_GET['search'];
-                        $sql = "SELECT * FROM post WHERE datetime LIKE '%$search%' OR title LIKE '%$search%' OR category LIKE '%$search%' OR post LIKE '%$search%' ORDER BY id DESC LIMIT $showPostFrom,5";
+                        $sql = "SELECT * FROM post WHERE status='publish' AND (datetime LIKE '%$search%' OR title LIKE '%$search%' OR category LIKE '%$search%' OR post LIKE '%$search%') ORDER BY id DESC LIMIT $showPostFrom,5";
                     }
                     // elseif(isset($_GET['page'])){
                     //     $page = $_GET['page'];
@@ -121,15 +121,16 @@
                     // }
                     elseif(isset($_GET['category'])){
                         $category = $_GET['category'];
-                        $sql = "SELECT * FROM post WHERE category='$category' ORDER BY id DESC LIMIT $showPostFrom,5";
+                        $sql = "SELECT * FROM post WHERE category='$category' AND status='publish' ORDER BY id DESC LIMIT $showPostFrom,5";
                     }else{
-                        $sql = "SELECT * FROM post ORDER BY id DESC LIMIT $showPostFrom,5";
+                        $sql = "SELECT * FROM post WHERE status='publish' ORDER BY id DESC LIMIT $showPostFrom,5";
                     }
                     $result = mysqli_query($conn, $sql);
                     if (mysqli_num_rows($result) > 0){
                         while($row = mysqli_fetch_assoc($result)) {
                             $PostId = $row['id'];
                             $PostSlug = $row['slug'];
+                            $PostTags = $row['tags'];
                             $DateTime = $row['datetime'];
                             $PostTitle = $row['title'];
                             $Category = $row['category'];
@@ -142,6 +143,13 @@
                     <div class="card-body">
                         <h4 class="card-title"><?= htmlentities($PostTitle); ?></h4>
                         <small class='text-muted'>Category: <span class="text-dark"><a href="<?= $serverName; ?>/category/<?= $Category; ?>/1"><?= $Category; ?></a></span> & Written By <span class="text-dark"><a href="<?= $serverName; ?>/profile/<?= $Admin; ?>"><?= htmlentities($Admin); ?></a></span> On <span class="text-dark"><?= htmlentities($DateTime); ?></span></small>
+                        <?php
+                            if(strlen($PostTags) != 0){
+                        ?>
+                            <div class="my-1">
+                                <span><i class="fas fa-tags"></i> <?= $PostTags; ?></span>
+                            </div>
+                        <?php } ?>
                         <span style="float:right;" class="badge badge-dark text-light">Comments <?= approvedCommentsAccordingToPost($PostId); ?></span>
                         <hr>
                         <p class="card-text">
@@ -155,6 +163,8 @@
                 </div>
                 <?php
                         }
+                    }else{
+                        echo "<h4 class='text-danger text-center my-5'>No Post Found</h4>";
                     }
                 ?>
                 <br>
@@ -274,7 +284,7 @@
                     </div>
                     <div class="card-body">
                         <?php
-                            $sql = "SELECT * FROM post ORDER BY id DESC LIMIT 0,5";
+                            $sql = "SELECT * FROM post WHERE status='publish' ORDER BY id DESC LIMIT 0,5";
                             $result = mysqli_query($conn, $sql);
                             if(mysqli_num_rows($result)>0){
                                 while($row = mysqli_fetch_assoc($result)){

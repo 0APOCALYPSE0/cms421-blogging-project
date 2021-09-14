@@ -23,7 +23,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="keywords" content="Blog, Blogging, Travel Blog, Technology Blog, Food Blog, Fashion Blog, Science Blog, Education Blog, Movie Blog">
     <meta name="description" content="CMS Blogging is responsive website for a blogging. Blogging is about sharing your knowledge with the world. Choosing a topic that you are passionate about makes the process of starting a successful blog so much easier. Start Writing your blog from today.">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <script src="https://kit.fontawesome.com/a977020c47.js" crossorigin="anonymous"></script>
@@ -109,8 +109,8 @@
         <div class="row mt-4">
             <!-- Main Area Start -->
             <div class="col-lg-8 col-md-12">
-                <h1 class="display-4">Start your own blog on Blogging Lovestoblog</h1>
-                <h2 class="lead">Blogging is mode of expressing your feelings</h2>
+                <h1 class="display-4 px-3">Start your own blog on Blogging Lovestoblog</h1>
+                <p class="lead px-3">Blogging is mode of expressing your feelings</p>
                 <?php echo ErrorMessage(); echo SuccessMessage(); ?>
                 <div class="jumbotron text-light" style="background-image: url('<?= $imagesBaseURL ?>/wood.jpg');">
                     <h6 class="display-4">Welcome To The CMS4.2.1 Blog.</h6>
@@ -123,11 +123,13 @@
                 </div>
                 <div class="container">
                     <div class="row">
-                        <h1 class="display-4 mb-4">Top Blog Stories</h1>
+                        <div class="col-sm-12">
+                            <h2 class="mb-4">Top Blog Stories</h2>
+                        </div>
                     </div>
                     <div class="row">
                         <?php
-                            $sql = "SELECT * FROM post";
+                            $sql = "SELECT * FROM post WHERE status='publish'";
                             $result = mysqli_query($conn, $sql);
                             if (mysqli_num_rows($result) > 0){
                                 while($row = mysqli_fetch_assoc($result)) {
@@ -135,6 +137,7 @@
                                     $DateTime = $row['datetime'];
                                     $PostTitle = $row['title'];
                                     $PostSlug = $row['slug'];
+                                    $PostTags = $row['tags'];
                                     $Category = $row['category'];
                                     $Admin = $row['author'];
                                     $Image = $row['image'];
@@ -154,6 +157,13 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Posted By: <strong><?= $Admin; ?></strong> On <strong><?= $Category; ?></strong></h5>
                                     <h6 class="card-subtitle text-muted"><?= $DateTime; ?></h6>
+                                    <?php
+                                        if(strlen($PostTags) != 0){
+                                    ?>
+                                        <div class="my-1">
+                                            <span><i class="fas fa-tags"></i> <?= $PostTags; ?></span>
+                                        </div>
+                                    <?php } ?>
                                     <img class="mt-2" style="height: 300px; width: 100%; display: block;" src="<?= $uploadBaseURL ?>/<?= $Image;?>" title="<?= $PostTitle ?>" alt="<?= $Image; ?>">
                                     <p class="card-text"><?php if(strlen($PostDescription)>200){ $PostDescription=substr($PostDescription, 0, 200).'...'; } echo $PostDescription; ?></p>
                                     <a href="<?= $serverName; ?>/post/<?= $PostSlug; ?>" class="card-link btn btn-primary">Read More >></a>
@@ -226,7 +236,7 @@
                     </div>
                     <div class="card-body">
                         <?php
-                            $sql = "SELECT * FROM post ORDER BY id DESC LIMIT 0,5";
+                            $sql = "SELECT * FROM post WHERE status='publish' ORDER BY id DESC LIMIT 0,5";
                             $result = mysqli_query($conn, $sql);
                             if(mysqli_num_rows($result)>0){
                                 while($row = mysqli_fetch_assoc($result)){

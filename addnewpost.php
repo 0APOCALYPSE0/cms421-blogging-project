@@ -7,10 +7,12 @@
     if(isset($_POST['submit'])){
         $postTitle = $_POST['postTitle'];
         $postSlug = $_POST['postSlug'] == '' ? post_slug($_POST['postTitle']) : $_POST['postSlug'];
+        $postTags = $_POST['postTags'];
         $category = $_POST['category'];
         $image = $_FILES['image']['name'];
         $postDescription = $_POST['postDescription'];
-        $target = "<?= $uploadBaseURL; ?>/".basename($_FILES['image']['name']);
+        $postStatus = $_POST['postTags'];
+        $target = "Upload/".basename($_FILES['image']['name']);
         $admin = $_SESSION['username'];
         date_default_timezone_set("Asia/Calcutta");
         $currentTime = time();
@@ -25,6 +27,7 @@
             $counter++;
             $postSlug = "{$intialPostSlug}-{$counter}";
         }
+        echo $target;
         if(empty($postTitle)){
             $_SESSION['ErrorMessage'] = 'Post title can\'t be empty.';
             Redirect_To($serverName."/addnewpost");
@@ -35,9 +38,9 @@
             $_SESSION['ErrorMessage'] = 'Post title should be less than 1000 character.';
             Redirect_To($serverName."/addnewpost");
         }else{
-            $sql = "INSERT INTO post(datetime, title, slug, category, author, image, post) VALUES(?, ?, ?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO post(datetime, title, slug, tags, category, author, image, post, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssssss",$dateTime, $postTitle, $postSlug, $category, $admin, $image, $postDescription);
+            $stmt->bind_param("sssssssss",$dateTime, $postTitle, $postSlug, $postTags, $category, $admin, $image, $postDescription, $postStatus);
             $execute = $stmt->execute();
             $last_id = $conn->insert_id;
             move_uploaded_file($_FILES['image']['tmp_name'], $target);
@@ -66,7 +69,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
@@ -146,6 +149,10 @@
                             <div class="form-group">
                                 <label for="postSlug"><span class="fieldInfo">Post Slug</span></label>
                                 <input type="text" name='postSlug' class="form-control" id='postSlug' placeholder='Enter post slug'>
+                            </div>
+                            <div class="form-group">
+                                <label for="postTags"><span class="fieldInfo">Post Tags</span></label>
+                                <input type="text" name='postTags' class="form-control" id='postTags' placeholder='Enter post tags'>
                             </div>
                             <div class="form-group">
                                 <label for="postTitle"><span class="fieldInfo">Choose Category</span></label>
