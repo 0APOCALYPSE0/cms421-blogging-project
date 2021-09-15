@@ -3,16 +3,29 @@
     require 'Includes/functions.php';
     require 'Includes/sessions.php';
 
-    $searchQryParam = $_GET['slug'];
-    $sqlForId = "SELECT id, title, post, category, tags FROM post Where slug='$searchQryParam'";
-    $resultForId = mysqli_query($conn, $sqlForId);
-    if (mysqli_num_rows($resultForId) > 0){
-        $row = mysqli_fetch_assoc($resultForId);
-        $postIdFromUrl = $row['id'];
-        $pageTitle = $row['title'];
-        $pageDescription = $row['post'];
-        $pageCategory = $row['category'];
-        $pageTags = $row['tags'];
+    if(isset($_GET['id'])){
+        $redirectId = $_GET['id'];
+        $redirectSql = "SELECT slug FROM post WHERE id='$redirectId'";
+        $resultForRedirect = mysqli_query($conn, $redirectSql);
+        $redirectResult = mysqli_fetch_assoc($resultForRedirect);
+        $redirectUrl = $serverName.'/post/'.$redirectResult['slug'];
+        header("HTTP/1.1 301 Moved Permanently");
+        header("Location: ".$redirectUrl);
+        header("Connection: close");
+    }
+
+    if(isset($_GET['slug'])){
+        $searchQryParam = $_GET['slug'];
+        $sqlForId = "SELECT id, title, post, category, tags FROM post Where slug='$searchQryParam'";
+        $resultForId = mysqli_query($conn, $sqlForId);
+        if (mysqli_num_rows($resultForId) > 0){
+            $row = mysqli_fetch_assoc($resultForId);
+            $postIdFromUrl = $row['id'];
+            $pageTitle = $row['title'];
+            $pageDescription = $row['post'];
+            $pageCategory = $row['category'];
+            $pageTags = $row['tags'];
+        }
     }
     if(isset($_POST['Submit'])){
         $name = $_POST['commenterName'];
@@ -135,17 +148,17 @@
                     if(isset($_GET['searchButton'])){
                         $search = $_GET['search'];
                         $sql = "SELECT * FROM post WHERE datetime LIKE '%$search%' OR title LIKE '%$search%' OR category LIKE '%$search%' OR post LIKE '%$search%'";
-                    }else{
+                    }else if(isset($_GET['slug'])){
                         $PostSlugFromUrl = $_GET['slug'];
                         if(!isset($PostSlugFromUrl)){
-                            $_SESSION['ErrorMessage'] = "Bad Request !";
+                            $_SESSION['ErrorMessage'] = "Bad Request!";
                             Redirect_To($serverName."/blog/1");
                         }
                         $sql = "SELECT * FROM post Where slug='$PostSlugFromUrl'";
                     }
                     $result = mysqli_query($conn, $sql);
-                    if(mysqli_num_rows($result)!=1){
-                        $_SESSION['ErrorMessage'] = "Bad Request!";
+                    if(mysqli_num_rows($result)!=1 && isset($_GET['slug'])){
+                        $_SESSION['ErrorMessage'] = "Bad Request! ji";
                         Redirect_To($serverName."/blog/1");
                     }
                     if (mysqli_num_rows($result) > 0){
