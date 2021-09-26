@@ -138,8 +138,8 @@
                             $Image = $row['image'];
                             $PostDescription = $row['post'];
                 ?>
-                <div class="card my-2">
-                    <img src="<?= $uploadBaseURL ?>/<?= htmlentities($Image); ?>" title="<?= $PostTitle; ?>" alt="<?= $Image; ?>" class='img-fluid card-img-top' max-height='450px;'>
+                <div class="card my-2 shadow">
+                    <img src="<?= $uploadBaseURL ?>/<?= htmlentities($Image); ?>" title="<?= $PostTitle; ?>" alt="<?= $Image; ?>" class='shadow img-fluid card-img-top' max-height='450px;'>
                     <div class="card-body">
                         <h4 class="card-title"><?= htmlentities($PostTitle); ?></h4>
                         <small class='text-muted'>Category: <span class="text-dark"><a href="<?= $serverName; ?>/category/<?= $Category; ?>/1"><?= $Category; ?></a></span> & Written By <span class="text-dark"><a href="<?= $serverName; ?>/profile/<?= $Admin; ?>"><?= htmlentities($Admin); ?></a></span> On <span class="text-dark"><?= htmlentities($DateTime); ?></span></small>

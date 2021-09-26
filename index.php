@@ -152,7 +152,7 @@
                                     $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
                         ?>
                         <div class="col-md-6 col-sm-12">
-                            <div class="card mb-3" style="min-height: 700px">
+                            <div class="card mb-3 shadow" style="min-height: 700px">
                                 <h3 class="card-header"><?= $PostTitle; ?> </h3>
                                 <div class="card-body">
                                     <h5 class="card-title">Posted By: <strong><?= $Admin; ?></strong> On <strong><?= $Category; ?></strong></h5>
@@ -164,7 +164,7 @@
                                             <span><i class="fas fa-tags"></i> <?= $PostTags; ?></span>
                                         </div>
                                     <?php } ?>
-                                    <img class="mt-2" style="height: 300px; width: 100%; display: block;" src="<?= $uploadBaseURL ?>/<?= $Image;?>" title="<?= $PostTitle ?>" alt="<?= $Image; ?>">
+                                    <img class="mt-2 shadow" style="height: 300px; width: 100%; display: block;" src="<?= $uploadBaseURL ?>/<?= $Image;?>" title="<?= $PostTitle ?>" alt="<?= $Image; ?>">
                                     <p class="card-text"><?php if(strlen($PostDescription)>200){ $PostDescription=substr($PostDescription, 0, 200).'...'; } echo $PostDescription; ?></p>
                                     <a href="<?= $serverName; ?>/post/<?= $PostSlug; ?>" class="card-link btn btn-primary">Read More >></a>
                                 </div>
