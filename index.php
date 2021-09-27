@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
     <script src="https://kit.fontawesome.com/a977020c47.js" crossorigin="anonymous"></script>
-    <title>CMS Blogging</title>
+    <title>CMS Blogging - Write your first blog today</title>
 </head>
 <body>
     <div style="height: 10px; background-color: #27aae1;"></div>
