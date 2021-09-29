@@ -81,12 +81,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="<?=strip_tags(substr($pageDescription, 0, 200)); ?>">
-    <meta name="keywords" content="<?= $pageCategory; ?>, <?= $pageTags; ?>" >
+    <meta name="description" content="<?=strip_tags(substr(isset($pageDescription)? $pageDescription: " ", 0, 200)); ?>">
+    <meta name="keywords" content="<?= isset($pageCategory)? $pageCategory: ""; ?>, <?= isset($pageTags)? $pageTags : ""; ?>" >
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
-    <title><?= $pageTitle; ?></title>
+    <title><?= isset($pageTitle)? $pageTitle : "No Post Found"; ?></title>
 </head>
 <body>
     <div style="height: 10px; background-color: #27aae1;"></div>
@@ -142,7 +142,7 @@
         <div class="row mt-4">
             <!-- Main Area Start -->
             <div class="col-lg-8 col-md-12">
-                <h1 class="px-3"><?= $pageTitle; ?></h1>
+                <h1 class="px-3"><?= isset($pageTitle) ? $pageTitle : ''; ?></h1>
                 <?php echo ErrorMessage(); echo SuccessMessage(); ?>
                 <?php
                     if(isset($_GET['searchButton'])){
@@ -157,10 +157,10 @@
                         $sql = "SELECT * FROM post Where slug='$PostSlugFromUrl'";
                     }
                     $result = mysqli_query($conn, $sql);
-                    if(mysqli_num_rows($result)!=1 && isset($_GET['slug'])){
-                        $_SESSION['ErrorMessage'] = "Bad Request! ji";
-                        Redirect_To($serverName."/blog/1");
-                    }
+                    // if(mysqli_num_rows($result)!=1 && isset($_GET['slug'])){
+                    //     $_SESSION['ErrorMessage'] = "Bad Request!";
+                    //     Redirect_To($serverName."/blog/1");
+                    // }
                     if (mysqli_num_rows($result) > 0){
                         while($row = mysqli_fetch_assoc($result)) {
                             $PostId = $row['id'];
@@ -193,11 +193,16 @@
                 </div>
                 <?php
                         }
+                    } else {
+                        echo "<h4 class='text-danger text-center my-5'>No Post Found, Please check the url.</h4>";
                     }
                 ?>
                 <!-- Comment Start -->
                 <!-- Fetching Existing Comments Start -->
                 <br>
+                <?php
+                    if(isset($postIdFromUrl)){
+                ?>
                 <span class="fieldInfo">Comments</span>
                 <br><br>
                 <?php
@@ -260,6 +265,9 @@
                     </form>
                 </div>
                 <!-- Comment End -->
+                <?php
+                    }
+                ?>
             </div>
             <!-- Main Area End -->
 
