@@ -12,6 +12,7 @@ admins:
   bio: text
   image: text
   addedby: varchar(50)
+  permission: varchar(50)
 
 category:
   id: int, primary key, auto increament

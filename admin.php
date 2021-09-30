@@ -11,6 +11,7 @@
         $password = $_POST['password'];
         $cPassword = $_POST['cPassword'];
         $admin = $_SESSION['username'];
+        $permission = 'Admin';
         date_default_timezone_set("Asia/Calcutta");
         $currentTime = time();
         $dateTime = strftime("%e %b %y %H:%M:%S", $currentTime);
@@ -28,9 +29,9 @@
             $_SESSION['ErrorMessage'] = 'This username is already taken. Please choose another one.';
             Redirect_To($serverName."/admin");
         }else{
-            $sql = "INSERT INTO admins(datetime, username, password, aname, addedby) VALUES(?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO admins(datetime, username, password, aname, addedby, permission) VALUES(?, ?, ?, ?, ?, ?);";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssss", $dateTime, $userName, $password, $adminName, $admin);
+            $stmt->bind_param("sssss", $dateTime, $userName, $password, $adminName, $admin, $permission);
             $execute = $stmt->execute();
             $last_id = $conn->insert_id;
             // $sql = "INSERT INTO category(title, author, datetime)";

@@ -8,27 +8,39 @@
     }
 
     if(isset($_POST['submit'])){
+        $name = $_POST['name'];
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $confirmPassword = $_POST['confirmPassword'];
+        $addedby = 'System';
+        $permission = 'User';
+        date_default_timezone_set("Asia/Calcutta");
+        $currentTime = time();
+        $dateTime = strftime("%e %b %y %H:%M:%S", $currentTime);
 
         if(empty($username) || empty($password)){
             $_SESSION['ErrorMessage'] = 'All fields must be filled out.';
-            Redirect_To($serverName."/login");
+            Redirect_To($serverName."/signup");
+        }else if(strlen($password)<3){
+            $_SESSION['ErrorMessage'] = 'Password should be greater than 3 character.';
+            Redirect_To($serverName."/signup");
+        }elseif($password !== $confirmPassword){
+            $_SESSION['ErrorMessage'] = 'Password and Confirm Password are not matching.';
+            Redirect_To($serverName."/signup");
+        }elseif(checkUsernameExist($username)){
+            $_SESSION['ErrorMessage'] = 'This username is already taken. Please choose another one.';
+            Redirect_To($serverName."/signup");
         }else{
-            $foundAccount = loginAttempt($username, $password);
-            if($foundAccount){
-                $_SESSION['userID'] = $foundAccount['id'];
-                $_SESSION['username'] = $foundAccount['username'];
-                $_SESSION['adminName'] = $foundAccount['aname'];
-                $_SESSION['SuccessMessage'] = "Welcome ".$_SESSION['adminName'];
-                if(isset($_SESSION['trackingURL'])){
-                    Redirect_To($_SESSION['trackingURL']);
-                }else{
-                    Redirect_To($serverName."/dashboard");
-                }
-            }else{
-                $_SESSION['ErrorMessage'] = "Incorrect Username or Password.";
+            $sql = "INSERT INTO admins(datetime, username, password, aname, addedby, permission) VALUES(?, ?, ?, ?, ?, ?);";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssss", $dateTime, $username, $password, $name, $addedby, $permission);
+            $execute = $stmt->execute();
+            if($execute){
+                $_SESSION['SuccessMessage'] = $name." You have signed up successfully.";
                 Redirect_To($serverName."/login");
+            }else{
+                $_SESSION['ErrorMessage'] = "Something went wrong. Try Again.";
+                Redirect_To($serverName."/signup");
             }
         }
     }
@@ -52,7 +64,7 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
-    <title>Log In</title>
+    <title>Sign Up</title>
 </head>
 <body>
     <div style="height: 10px; background-color: #27aae1;"></div>
@@ -105,7 +117,16 @@
                         <h4>Welcome Back</h4>
                     </div>
                     <div class="card-body bg-dark">
-                        <form action="<?= $serverName; ?>/login" method="post">
+                        <form action="<?= $serverName; ?>/signup" method="post">
+                            <div class="form-group">
+                                <label for="name"><span class="fieldInfo">Name:</span></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-white bg-info"><i class="fas fa-user-circle"></i></span>
+                                    </div>
+                                    <input type="text" name="name" id="name" class="form-control">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="username"><span class="fieldInfo">Username:</span></label>
                                 <div class="input-group mb-3">
@@ -124,12 +145,21 @@
                                     <input type="password" name="password" id="password" class="form-control">
                                 </div>
                             </div>
-                            <input type="submit" name="submit" class="btn btn-info btn-block" value="Log In">
-                            <div class="text-center my-2">
-                                <h4 class="text-light">Don't have Account? Create One</h4>
-                                <a href="<?= $serverName; ?>/signup" class="btn btn-success btn-block">Sign Up</a>
+                            <div class="form-group">
+                                <label for="confirmPassword"><span class="fieldInfo">Confirm Password:</span></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-white bg-info"><i class="fad fa-lock-alt"></i></span>
+                                    </div>
+                                    <input type="password" name="confirmPassword" id="confirmPassword" class="form-control">
+                                </div>
                             </div>
+                            <input type="submit" name="submit" class="btn btn-info btn-block" value="Sign Up">
                         </form>
+                        <div class="text-center my-2">
+                          <h4 class="text-light">Account Already exists?</h4>
+                          <a href="<?= $serverName; ?>/login" class="btn btn-primary btn-block">Log In</a>
+                        </div>
                     </div>
                 </div>
             </div>

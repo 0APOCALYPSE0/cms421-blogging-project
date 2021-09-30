@@ -51,6 +51,12 @@ echo '<lastmod>'.$date.'</lastmod>' . PHP_EOL;
 echo '<changefreq>daily</changefreq>' . PHP_EOL;
 echo '</url>' . PHP_EOL;
 
+echo '<url>' . PHP_EOL;
+echo '<loc>'.$base_url.'/signup</loc>' . PHP_EOL;
+echo '<lastmod>'.$date.'</lastmod>' . PHP_EOL;
+echo '<changefreq>daily</changefreq>' . PHP_EOL;
+echo '</url>' . PHP_EOL;
+
 $num = intval(mysqli_num_rows($pages)/5);
 $num = $num+1;
 while($num > 0){

@@ -198,7 +198,7 @@
                         <h2 class="lead">Sign Up</h2>
                     </div>
                     <div class="card-body">
-                        <button type="button" class="btn btn-success btn-block text-center text-white mb-2" name="button">Join the Forum</button>
+                        <a href="<?= $serverName; ?>/signup"><button type="button" class="btn btn-success btn-block text-center text-white mb-2" name="button">Sign Up</button></a>
                         <a href="<?= $serverName; ?>/login"><button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button></a>
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="" value="" placeholder="Enter your email">
