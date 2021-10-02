@@ -57,8 +57,7 @@ echo '<lastmod>'.$date.'</lastmod>' . PHP_EOL;
 echo '<changefreq>daily</changefreq>' . PHP_EOL;
 echo '</url>' . PHP_EOL;
 
-$num = intval(mysqli_num_rows($pages)/5);
-$num = $num+1;
+$num = ceil(mysqli_num_rows($pages)/5);
 while($num > 0){
  echo '<url>' . PHP_EOL;
  echo '<loc>'.$serverName.'/blog/'.$num.'</loc>' . PHP_EOL;
