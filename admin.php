@@ -180,7 +180,16 @@
                         </tr>
                     </thead>
                     <?php
-                        $sql = "SELECT * FROM admins ORDER BY id DESC";
+                        $showPostFrom = 0;
+                        if(isset($_GET['page'])){
+                            $page = $_GET['page'];
+                            if($page === 0 || $page <= 1){
+                                $showPostFrom = 0;
+                            }else{
+                                $showPostFrom = ($page*5)-5;
+                            }
+                        }
+                        $sql = "SELECT * FROM admins ORDER BY id DESC LIMIT $showPostFrom,5";
                         $result = mysqli_query($conn, $sql);
                         $sr = 0;
                         if (mysqli_num_rows($result) > 0){
@@ -207,6 +216,61 @@
                         }
                     ?>
                 </table>
+                <!-- Pagination Start  -->
+                <nav>
+                    <ul class="pagination pagination-link">
+                        <!-- Backward Button Start -->
+                        <?php
+                            if(isset($page)){
+                                if($page>1){
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/admin?page=<?= $page-1; ?>" class="page-link">&laquo;</a>
+                        </li>
+                        <?php
+                                }
+                            }
+                        ?>
+                        <!-- Backward Button End -->
+                        <?php
+                            if(isset($page)){
+                                $sql = "SELECT * FROM admins"
+                                $result = mysqli_query($conn, $sql);
+                                $totalPost = mysqli_num_rows($result);
+                                $postPagination = ceil($totalPost/5);
+                                for($i=1; $i<=$postPagination; $i++){
+                                    if($i == $page){
+                        ?>
+                        <li class="page-item active">
+                            <a href="<?= $serverName; ?>/admin?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
+                        </li>
+                        <?php
+                                    }else{
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/admin?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
+                        </li>
+                        <?php
+                                    }
+                                }
+                            }
+                        ?>
+                        <!-- Forward Button Start -->
+                        <?php
+                            if(isset($page) && !empty($page)){
+                                if($page+1 <= $postPagination){
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/admin?page=<?= $page+1; ?>" class="page-link">&raquo;</a>
+                        </li>
+                        <?php
+                                }
+                            }
+                        ?>
+                        <!-- Forward Button End -->
+                    </ul>
+                </nav>
+                <!-- Pagination End -->
             </div>
         </div>
     </section>

@@ -25,7 +25,7 @@
                 if(isset($_SESSION['trackingURL'])){
                     Redirect_To($_SESSION['trackingURL']);
                 }else{
-                    Redirect_To($serverName."/dashboard");
+                    Redirect_To($serverName."/dashboard?page=1");
                 }
             }else{
                 $_SESSION['ErrorMessage'] = "Incorrect Username or Password.";
