@@ -20,6 +20,7 @@
                 $_SESSION['userID'] = $foundAccount['id'];
                 $_SESSION['username'] = $foundAccount['username'];
                 $_SESSION['adminName'] = $foundAccount['aname'];
+                $_SESSION['permission'] = $foundAccount['permission'];
                 $_SESSION['SuccessMessage'] = "Welcome ".$_SESSION['adminName'];
                 if(isset($_SESSION['trackingURL'])){
                     Redirect_To($_SESSION['trackingURL']);

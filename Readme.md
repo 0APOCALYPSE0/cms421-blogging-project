@@ -41,3 +41,4 @@ post:
   image: text
   post: text
   status: varchar(50)
+  user_id: int

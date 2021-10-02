@@ -32,20 +32,24 @@
                         <a href="<?= $serverName; ?>/myprofile" class="nav-link"> <i class='fas fa-user'></i>My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/dashboard" class="nav-link">Dashboard</a>
+                        <a href="<?= $serverName; ?>/dashboard?page=1" class="nav-link">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/posts" class="nav-link">Posts</a>
+                        <a href="<?= $serverName; ?>/posts?page=1" class="nav-link">Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/categories" class="nav-link">Categories</a>
+                        <a href="<?= $serverName; ?>/categories?page=1" class="nav-link">Categories</a>
                     </li>
+                    <?php if($_SESSION['permission'] == 'Superuser'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['permission'] != 'User'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/comments" class="nav-link">Comments</a>
                     </li>
+                    <?php } ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/blog/1" class="nav-link">Live Blog</a>
                     </li>
@@ -74,12 +78,16 @@
                 <div class="col-lg-3 mb-2">
                     <a href="<?= $serverName; ?>/categories" class='btn btn-info btn-block'><i class='fas fa-folder-plus'></i> Add New Category</a>
                 </div>
+                <?php if($_SESSION['permission'] == 'Superuser'){ ?>
                 <div class="col-lg-3 mb-2">
                     <a href="<?= $serverName; ?>/admin" class='btn btn-warning btn-block'><i class='fas fa-user-plus'></i> Add New Admin</a>
                 </div>
+                <?php } ?>
+                <?php if($_SESSION['permission'] != 'User'){ ?>
                 <div class="col-lg-3 mb-2">
                     <a href="<?= $serverName; ?>/comments" class='btn btn-success btn-block'><i class='fas fa-check'></i> Approve Comments</a>
                 </div>
+                <?php } ?>
             </div>
         </div>
     </header>
@@ -105,8 +113,23 @@
                             <th>Live Preview</th>
                         </tr>
                     </thead>
+                    <tbody>
                     <?php
-                        $sql = "SELECT * FROM post";
+                        $showPostFrom = 0;
+                        if(isset($_GET['page'])){
+                            $page = $_GET['page'];
+                            if($page === 0 || $page <= 1){
+                                $showPostFrom = 0;
+                            }else{
+                                $showPostFrom = ($page*5)-5;
+                            }
+                        }
+                        if($_SESSION['permission'] == 'User'){
+                            $user_id = $_SESSION['userID'];
+                            $sql = "SELECT * FROM post WHERE user_id='$user_id' LIMIT $showPostFrom,5";
+                        }else{
+                            $sql = "SELECT * FROM post LIMIT $showPostFrom,5";
+                        }
                         $result = mysqli_query($conn, $sql);
                         $sr = 0;
                         if (mysqli_num_rows($result) > 0){
@@ -122,7 +145,6 @@
                                 $PostDescription = $row['post'];
                                 $PostStatus = $row['status'];
                     ?>
-                    <tbody>
                         <tr>
                             <td><?= $sr ?></td>
                             <td>
@@ -165,12 +187,74 @@
                             <td class="text-center"><a href="<?= $serverName; ?>/togglestatus.php?id=<?= $Id; ?>&status=<?= $PostStatus; ?>"><i class="fad fa-2x fa-toggle-<?= $PostStatus == 'publish' ? 'on' : 'off'; ?> text-<?= $PostStatus == 'publish' ? 'success' : 'danger'; ?>"></i></a></td>
                             <td><a href="<?= $serverName; ?>/post/<?= $PostSlug; ?>" target='_blank'><span class='btn btn-sm btn-primary'>Live Preview</span></a></td>
                         </tr>
-                    </tbody>
                     <?php
                             }
+                        }else{
+                            echo "<tr><td colspan='10' class='text-danger text-center'>No Post Available</td></tr>";
                         }
                     ?>
+                    </tbody>
                 </table>
+                <!-- Pagination Start  -->
+                <nav>
+                    <ul class="pagination pagination-link">
+                        <!-- Backward Button Start -->
+                        <?php
+                            if(isset($page)){
+                                if($page>1){
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/post?page=<?= $page-1; ?>" class="page-link">&laquo;</a>
+                        </li>
+                        <?php
+                                }
+                            }
+                        ?>
+                        <!-- Backward Button End -->
+                        <?php
+                            if(isset($page)){
+                                if($_SESSION['permission'] == 'User'){
+                                    $user_id = $_SESSION['userID'];
+                                    $sql = "SELECT * FROM post WHERE user_id='$user_id'";
+                                }else{
+                                    $sql = "SELECT * FROM post";
+                                }
+                                $result = mysqli_query($conn, $sql);
+                                $totalPost = mysqli_num_rows($result);
+                                $postPagination = ceil($totalPost/5);
+                                for($i=1; $i<=$postPagination; $i++){
+                                    if($i == $page){
+                        ?>
+                        <li class="page-item active">
+                            <a href="<?= $serverName; ?>/post?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
+                        </li>
+                        <?php
+                                    }else{
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/post?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
+                        </li>
+                        <?php
+                                    }
+                                }
+                            }
+                        ?>
+                        <!-- Forward Button Start -->
+                        <?php
+                            if(isset($page) && !empty($page)){
+                                if($page+1 <= $postPagination){
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/post?page=<?= $page+1; ?>" class="page-link">&raquo;</a>
+                        </li>
+                        <?php
+                                }
+                            }
+                        ?>
+                        <!-- Forward Button End -->
+                    </ul>
+                </nav>
+                <!-- Pagination End -->
             </div>
         </div>
     </section>

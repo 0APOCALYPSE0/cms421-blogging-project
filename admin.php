@@ -4,6 +4,10 @@
     require 'Includes/sessions.php';
     $_SESSION['trackingURL'] = $_SERVER["PHP_SELF"];
     confirmLogin();
+    if($_SESSION['permission'] != 'Superuser'){
+        $_SESSION['ErrorMessage'] = 'You are not allowed to access Manage Admins Page.';
+        Redirect_To($serverName."/dashboard");
+    }
 
     if(isset($_POST['submit'])){
         $userName = $_POST['userName'];
@@ -79,20 +83,24 @@
                         <a href="<?= $serverName; ?>/myprofile" class="nav-link"> <i class='fas fa-user'></i>My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/dashboard" class="nav-link">Dashboard</a>
+                        <a href="<?= $serverName; ?>/dashboard?page=1" class="nav-link">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/posts" class="nav-link">Posts</a>
+                        <a href="<?= $serverName; ?>/posts?page=1" class="nav-link">Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/categories" class="nav-link">Categories</a>
+                        <a href="<?= $serverName; ?>/categories?page=1" class="nav-link">Categories</a>
                     </li>
+                    <?php if($_SESSION['permission'] == 'Superuser'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['permission'] != 'User'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/comments" class="nav-link">Comments</a>
                     </li>
+                    <?php } ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/blog/1" class="nav-link">Live Blog</a>
                     </li>

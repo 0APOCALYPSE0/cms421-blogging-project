@@ -96,7 +96,7 @@
     <div class="container py-2 mb-4">
         <div class="row">
             <div class="col-md-3">
-                <img src="<?= $imagesBaseURL; ?>/<?= $image; ?>" alt="<?= $image; ?>" class="d-block img-fluid mb-3 rounded-circle">
+                <img src="<?= $imagesBaseURL; ?>/<?= ($image != '')? $image : 'profile.jpg'; ?>" alt="<?= $image; ?>" class="d-block img-fluid mb-3 rounded-circle">
             </div>
             <div class="col-md-9" style="min-height:400px;">
                 <div class="card">

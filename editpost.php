@@ -91,12 +91,16 @@
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/categories" class="nav-link"> Categories</a>
                     </li>
+                    <?php if($_SESSION['permission'] == 'Superuser'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['permission'] != 'User'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/comments" class="nav-link">Comments</a>
                     </li>
+                    <?php } ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/blog/1" class="nav-link">Live Blog</a>
                     </li>

@@ -4,6 +4,10 @@
     require 'Includes/sessions.php';
     $_SESSION['trackingURL'] = $_SERVER["PHP_SELF"];
     confirmLogin();
+    if($_SESSION['permission'] == 'User'){
+        $_SESSION['ErrorMessage'] = 'You are not allowed to access Comments Page.';
+        Redirect_To($serverName."/dashboard");
+    }
 ?>
 
 <!DOCTYPE html>
@@ -32,20 +36,24 @@
                         <a href="<?= $serverName; ?>/myprofile" class="nav-link"> <i class='fas fa-user'></i>My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/dashboard" class="nav-link">Dashboard</a>
+                        <a href="<?= $serverName; ?>/dashboard?page=1" class="nav-link">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/posts" class="nav-link">Posts</a>
+                        <a href="<?= $serverName; ?>/posts?page=1" class="nav-link">Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/categories" class="nav-link">Categories</a>
+                        <a href="<?= $serverName; ?>/categories?page=1" class="nav-link">Categories</a>
                     </li>
+                    <?php if($_SESSION['permission'] == 'Superuser'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['permission'] != 'User'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/comments" class="nav-link">Comments</a>
                     </li>
+                    <?php } ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/blog/1" class="nav-link">Live Blog</a>
                     </li>
@@ -90,6 +98,7 @@
                             <th>Details</th>
                         </tr>
                     </thead>
+                    <tbody>
                     <?php
                         $sql = "SELECT * FROM comments WHERE status='OFF' ORDER BY id DESC";
                         $result = mysqli_query($conn, $sql);
@@ -111,7 +120,6 @@
                                     $PostSlug = $row['slug'];
                                 }
                     ?>
-                    <tbody>
                         <tr>
                             <td><?= $sr; ?></td>
                             <td><?= $DateTime; ?></td>
@@ -121,11 +129,13 @@
                             <td><a class="btn btn-danger" href="<?= $serverName; ?>/deletecomment?id=<?= $CommentId; ?>">Delete</a></td>
                             <td style="min-width:140px;"><a class="btn btn-primary" href="<?= $serverName; ?>/post/<?= $PostSlug; ?>">Live Preview</a></td>
                         </tr>
-                    </tbody>
                     <?php
                             }
+                        }else{
+                            echo "<tr><td colspan='7' class='text-danger text-center'>No Comments Available</td></tr>";
                         }
                     ?>
+                    </tbody>
                 </table>
                 <h2>Approved Comments</h2>
                 <table class="table table-striped table-hover">
@@ -140,6 +150,7 @@
                             <th>Details</th>
                         </tr>
                     </thead>
+                    <tbody>
                     <?php
                         $sql = "SELECT * FROM comments WHERE status='ON' ORDER BY id DESC";
                         $result = mysqli_query($conn, $sql);
@@ -161,7 +172,6 @@
                                 // if(strlen($CommenterName)>10){ $CommenterName = substr($CommenterName,0,10).'...'; }
                                 // if(strlen($DateTime)>11){ $DateTime = substr($DateTime,0,11).'...'; }
                     ?>
-                    <tbody>
                         <tr>
                             <td><?= $sr; ?></td>
                             <td><?= $DateTime; ?></td>
@@ -171,11 +181,13 @@
                             <td><a class="btn btn-danger" href="<?= $serverName; ?>/deletecomment?id=<?= $CommentId; ?>">Delete</a></td>
                             <td style="min-width:140px;"><a class="btn btn-primary" href="<?= $serverName; ?>/post/<?= $PostSlug; ?>">Live Preview</a></td>
                         </tr>
-                    </tbody>
                     <?php
                             }
+                        }else{
+                            echo "<tr><td colspan='7' class='text-danger text-center'>No Comments Available</td></tr>";
                         }
                     ?>
+                    </tbody>
                 </table>
             </div>
         </div>

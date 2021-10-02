@@ -72,20 +72,24 @@
                         <a href="<?= $serverName; ?>/myprofile" class="nav-link"> <i class='fas fa-user'></i>My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/dashboard" class="nav-link">Dashboard</a>
+                        <a href="<?= $serverName; ?>/dashboard?page=1" class="nav-link">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/posts" class="nav-link">Posts</a>
+                        <a href="<?= $serverName; ?>/posts?page=1" class="nav-link">Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/categories" class="nav-link">Categories</a>
+                        <a href="<?= $serverName; ?>/categories?page=1" class="nav-link">Categories</a>
                     </li>
+                    <?php if($_SESSION['permission'] == 'Superuser'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['permission'] != 'User'){ ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/comments" class="nav-link">Comments</a>
                     </li>
+                    <?php } ?>
                     <li class="nav-item">
                         <a href="<?= $serverName; ?>/blog/1" class="nav-link">Live Blog</a>
                     </li>
@@ -147,13 +151,25 @@
                             <th>Date & Time</th>
                             <th>Category Name</th>
                             <th>Creater Name</th>
+                            <?php if($_SESSION['permission'] != 'User'){ ?>
                             <th>Action</th>
+                            <?php } ?>
                         </tr>
                     </thead>
+                    <tbody>
                     <?php
-                        $sql = "SELECT * FROM category ORDER BY id DESC";
+                        $showPostFrom = 0;
+                        if(isset($_GET['page'])){
+                            $page = $_GET['page'];
+                            if($page === 0 || $page <= 1){
+                                $showPostFrom = 0;
+                            }else{
+                                $showPostFrom = ($page*5)-5;
+                            }
+                        }
+                        $sql = "SELECT * FROM category ORDER BY id DESC LIMIT $showPostFrom,5";
                         $result = mysqli_query($conn, $sql);
-                        $sr = 0;
+                        $sr = $showPostFrom;
                         if (mysqli_num_rows($result) > 0){
                             while($row = mysqli_fetch_assoc($result)) {
                                 $sr++;
@@ -162,20 +178,78 @@
                                 $CategoryName = $row['title'];
                                 $CreaterName = $row['author'];
                     ?>
-                    <tbody>
                         <tr>
                             <td><?= $sr; ?></td>
                             <td><?= $DateTime; ?></td>
                             <td><?= $CategoryName; ?></td>
                             <td><?= $CreaterName; ?></td>
+                            <?php if($_SESSION['permission'] != 'User'){ ?>
                             <td><a class="btn btn-danger" href="<?= $serverName; ?>/deletecategory?id=<?= $CategorytId; ?>">Delete</a></td>
+                            <?php } ?>
                         </tr>
-                    </tbody>
                     <?php
                             }
+                        }else{
+                            echo "<tr colspan='4' class='text-danger text-center'><td>No Category Available</td></tr>";
                         }
                     ?>
+                    </tbody>
                 </table>
+                <!-- Pagination Start  -->
+                <nav>
+                    <ul class="pagination pagination-link">
+                        <!-- Backward Button Start -->
+                        <?php
+                            if(isset($page)){
+                                if($page>1){
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/categories?page=<?= $page-1; ?>" class="page-link">&laquo;</a>
+                        </li>
+                        <?php
+                                }
+                            }
+                        ?>
+                        <!-- Backward Button End -->
+                        <?php
+                            if(isset($page)){
+                                $sql = "SELECT * FROM category";
+                                $result = mysqli_query($conn, $sql);
+                                $totalPost = mysqli_num_rows($result);
+                                $postPagination = ceil($totalPost/5);
+                                for($i=1; $i<=$postPagination; $i++){
+                                    if($i == $page){
+                        ?>
+                        <li class="page-item active">
+                            <a href="<?= $serverName; ?>/categories?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
+                        </li>
+                        <?php
+                                    }else{
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/categories?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
+                        </li>
+                        <?php
+                                    }
+                                }
+                            }
+                        ?>
+                        <!-- Forward Button Start -->
+                        <?php
+                            if(isset($page) && !empty($page)){
+                                if($page+1 <= $postPagination){
+                        ?>
+                        <li class="page-item">
+                            <a href="<?= $serverName; ?>/categories?page=<?= $page+1; ?>" class="page-link">&raquo;</a>
+                        </li>
+                        <?php
+                                }
+                            }
+                        ?>
+                        <!-- Forward Button End -->
+                    </ul>
+                </nav>
+                <!-- Pagination End -->
             </div>
         </div>
     </section>

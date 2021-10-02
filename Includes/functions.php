@@ -74,7 +74,12 @@
 
     function totalPosts(){
         global $conn;
-        $sql = "SELECT * FROM post";
+        if($_SESSION['permission'] == 'User'){
+            $user_id = $_SESSION['userID'];
+            $sql = "SELECT * FROM post WHERE user_id='$user_id'";
+        }else{
+            $sql = "SELECT * FROM post";
+        }
         $result = mysqli_query($conn, $sql);
         return mysqli_num_rows($result);
     }
@@ -88,14 +93,19 @@
 
     function totalAdmins(){
         global $conn;
-        $sql = "SELECT * FROM admins";
+        $sql = "SELECT * FROM admins Where permission != 'User'";
         $result = mysqli_query($conn, $sql);
         return mysqli_num_rows($result);
     }
 
     function totalComments(){
         global $conn;
-        $sql = "SELECT * FROM comments";
+        if($_SESSION['permission'] == 'User'){
+            $user_id = $_SESSION['userID'];
+            $sql = "SELECT * FROM comments INNER JOIN post ON post.id = comments.post_id WHERE user_id='$user_id'";
+        }else{
+            $sql = "SELECT * FROM comments";
+        }
         $result = mysqli_query($conn, $sql);
         return mysqli_num_rows($result);
     }
