@@ -2,7 +2,7 @@
     require_once 'Includes/db.php';
     require 'Includes/functions.php';
     require 'Includes/sessions.php';
-    $_SESSION['trackingURL'] = $_SERVER["PHP_SELF"];
+    $_SESSION['trackingURL'] = $_SERVER["PHP_SELF"].'?page=1';
     confirmLogin();
 ?>
 

@@ -2,7 +2,7 @@
     require 'Includes/db.php';
     require 'Includes/functions.php';
     require 'Includes/sessions.php';
-    $_SESSION['trackingURL'] = $_SERVER["PHP_SELF"];
+    $_SESSION['trackingURL'] = $_SERVER["PHP_SELF"].'?page=1';
     confirmLogin();
     if($_SESSION['permission'] != 'Superuser'){
         $_SESSION['ErrorMessage'] = 'You are not allowed to access Manage Admins Page.';
