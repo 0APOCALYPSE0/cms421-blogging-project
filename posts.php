@@ -42,7 +42,7 @@
                     </li>
                     <?php if($_SESSION['permission'] == 'Superuser'){ ?>
                     <li class="nav-item">
-                        <a href="<?= $serverName; ?>/admin" class="nav-link">Manage Admins</a>
+                        <a href="<?= $serverName; ?>/admin?page=1" class="nav-link">Manage Admins</a>
                     </li>
                     <?php } ?>
                     <?php if($_SESSION['permission'] != 'User'){ ?>
