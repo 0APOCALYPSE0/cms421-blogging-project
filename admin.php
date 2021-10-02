@@ -6,7 +6,7 @@
     confirmLogin();
     if($_SESSION['permission'] != 'Superuser'){
         $_SESSION['ErrorMessage'] = 'You are not allowed to access Manage Admins Page.';
-        Redirect_To($serverName."/dashboard");
+        Redirect_To($serverName."/dashboard?page=1");
     }
 
     if(isset($_POST['submit'])){
@@ -22,16 +22,16 @@
 
         if(empty($userName) || empty($password) || empty($cPassword)){
             $_SESSION['ErrorMessage'] = 'All fields must be filled out.';
-            Redirect_To($serverName."/admin");
+            Redirect_To($serverName."/admin?page=1");
         }elseif(strlen($password)<3){
             $_SESSION['ErrorMessage'] = 'Password should be greater than 3 character.';
-            Redirect_To($serverName."/admin");
+            Redirect_To($serverName."/admin?page=1");
         }elseif($password !== $cPassword){
             $_SESSION['ErrorMessage'] = 'Password and Confirm Password are not matching.';
-            Redirect_To($serverName."/admin");
+            Redirect_To($serverName."/admin?page=1");
         }elseif(checkUsernameExist($userName)){
             $_SESSION['ErrorMessage'] = 'This username is already taken. Please choose another one.';
-            Redirect_To($serverName."/admin");
+            Redirect_To($serverName."/admin?page=1");
         }else{
             $sql = "INSERT INTO admins(datetime, username, password, aname, addedby, permission) VALUES(?, ?, ?, ?, ?, ?);";
             $stmt = $conn->prepare($sql);
@@ -48,10 +48,10 @@
             // $execute = $stmt->execute();
             if($execute){
                 $_SESSION['SuccessMessage'] = "New Admin with Name ".$adminName." Added Successfully.";
-                Redirect_To($serverName."/admin");
+                Redirect_To($serverName."/admin?page=1");
             }else{
                 $_SESSION['ErrorMessage'] = "Something went wrong. Try Again.";
-                Redirect_To($serverName."/admin");
+                Redirect_To($serverName."/admin?page=1");
             }
         }
     }
@@ -133,7 +133,7 @@
         <div class="row">
             <div class="offset-lg-1 col-lg-10" style="min-height: 400px;">
             <?php echo ErrorMessage(); echo SuccessMessage(); ?>
-                <form action="<?= $serverName; ?>/admin" method='post'>
+                <form action="<?= $serverName; ?>/admin?page=1" method='post'>
                     <div class="card bg-secondary text-light mb-3">
                         <div class="card-header">
                             <h1>Add New Admin</h1>

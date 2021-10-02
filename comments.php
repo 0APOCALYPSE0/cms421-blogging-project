@@ -6,7 +6,7 @@
     confirmLogin();
     if($_SESSION['permission'] == 'User'){
         $_SESSION['ErrorMessage'] = 'You are not allowed to access Comments Page.';
-        Redirect_To($serverName."/dashboard");
+        Redirect_To($serverName."/dashboard?page=1");
     }
 ?>
 

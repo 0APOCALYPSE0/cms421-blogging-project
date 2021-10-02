@@ -11,10 +11,10 @@
         echo $execute;
         if($execute){
             $_SESSION['SuccessMessage'] = "Admin Deleted Successfully";
-            Redirect_To($serverName."/admin");
+            Redirect_To($serverName."/admin?page=1");
         }else{
             $_SESSION['ErrorMessage'] = "Something went wrong. Try again...";
-            Redirect_To($serverName."/admin");
+            Redirect_To($serverName."/admin?page=1");
         }
     }
 

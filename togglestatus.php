@@ -17,10 +17,10 @@
         echo $execute;
         if($execute){
             $_SESSION['SuccessMessage'] = "Status updated Successfully";
-            Redirect_To($serverName."/posts");
+            Redirect_To($serverName."/posts?page=1");
         }else{
             $_SESSION['ErrorMessage'] = "Something went wrong. Try again...";
-            Redirect_To($serverName."/posts");
+            Redirect_To($serverName."/posts?page=1");
         }
     }
 

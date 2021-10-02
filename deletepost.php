@@ -26,7 +26,7 @@
             $Target_Path_To_Delete_Image = "<?= $uploadBaseURL; ?>/$Image";
             unlink($Target_Path_To_Delete_Image);
             $_SESSION['SuccessMessage'] = "Post Deleted Successfully.";
-            Redirect_To($serverName."/posts");
+            Redirect_To($serverName."/posts?page=1");
         }else{
             $_SESSION['ErrorMessage'] = "Something went wrong. Try Again.";
             Redirect_To($serverName."/deletepost");

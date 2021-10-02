@@ -47,7 +47,7 @@
             // $execute = $stmt->execute();
             if($execute){
                 $_SESSION['SuccessMessage'] = "Post Updated Successfully.";
-                Redirect_To($serverName."/posts");
+                Redirect_To($serverName."/posts?page=1");
             }else{
                 $_SESSION['ErrorMessage'] = "Something went wrong. Try Again.";
                 Redirect_To($serverName."/editpost?id=".$searchQryParam);

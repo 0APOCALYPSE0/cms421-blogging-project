@@ -4,7 +4,7 @@
     require 'Includes/sessions.php';
 
     if(isset($_SESSION['userID'])){
-        Redirect_To($serverName."/dashboard");
+        Redirect_To($serverName."/dashboard?page=1");
     }
 
     if(isset($_POST['submit'])){
