@@ -234,7 +234,7 @@
                         <!-- Backward Button End -->
                         <?php
                             if(isset($page)){
-                                $sql = "SELECT * FROM admins"
+                                $sql = "SELECT * FROM admins";
                                 $result = mysqli_query($conn, $sql);
                                 $totalPost = mysqli_num_rows($result);
                                 $postPagination = ceil($totalPost/5);
