@@ -1,36 +1,38 @@
 <?php
-    require 'Includes/db.php';
-    require 'Includes/functions.php';
-    require 'Includes/sessions.php';
+  require_once 'Includes/db.php';
+  require 'Includes/functions.php';
+  require 'Includes/sessions.php';
 
-    if(isset($_SESSION['userID'])){
+  if(!isset($_SESSION['sessionId'])){
+    Redirect_To($serverName."/login");
+  }
+
+  $errorMessage = "";
+
+  if(!empty($_POST["authenticate"]) && $_POST["otp"]!='') {
+    echo "hello";
+    $sqlQuery = "SELECT * FROM authentication WHERE otp='". $_POST["otp"]."' AND expired!=1 AND NOW() <= DATE_ADD(created, INTERVAL 1 HOUR)";
+    $result = mysqli_query($conn, $sqlQuery);
+    $count = mysqli_num_rows($result);
+    if(!empty($count)) {
+      $sqlUpdate = "UPDATE authentication SET expired = 1 WHERE otp = '" . $_POST["otp"] . "'";
+      $result = mysqli_query($conn, $sqlUpdate);
+
+      $_SESSION['userID'] = $_SESSION["sessionId"];
+      $_SESSION['SuccessMessage'] = "Welcome ".$_SESSION['adminName'];
+
+      if(isset($_SESSION['trackingURL'])){
+        Redirect_To($_SESSION['trackingURL']);
+      }else{
         Redirect_To($serverName."/dashboard?page=1");
+      }
+    } else {
+      $_SESSION['ErrorMessage'] = "Invalid OTP!";
     }
-
-    if(isset($_POST['submit'])){
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        if(empty($email) || empty($password)){
-            $_SESSION['ErrorMessage'] = 'All fields must be filled out.';
-            Redirect_To($serverName."/login");
-        }else{
-            $foundAccount = loginAttempt($email, $password);
-            if($foundAccount){
-                $_SESSION['username'] = $foundAccount['username'];
-                $_SESSION['adminName'] = $foundAccount['aname'];
-                $_SESSION['permission'] = $foundAccount['permission'];
-                $_SESSION['sessionId'] = $foundAccount['id'];
-
-                sendOtp($email);
-            }else{
-                $_SESSION['ErrorMessage'] = "Incorrect Email or Password.";
-                Redirect_To($serverName."/login");
-            }
-        }
-    }
+  } else if(!empty($_POST["otp"])){
+    $_SESSION['ErrorMessage'] = "Enter OTP!";
+  }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +51,7 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
-    <title>Log In</title>
+    <title>Verify OTP</title>
 </head>
 <body>
     <div style="height: 10px; background-color: #27aae1;"></div>
@@ -91,41 +93,29 @@
         </div>
     </header>
     <!-- Header End -->
+
     <!-- Main Area Start -->
     <section class="container py-2 mb-4">
         <div class="row">
             <div class="offset-sm-3 col-sm-6" style="min-height: 500px;">
                 <br><br><br>
-                <?php echo ErrorMessage(); echo SuccessMessage(); ?>
+                <?php echo ErrorMessage(); ?>
                 <div class="card bg-secondary text-ligh">
                     <div class="card-header">
-                        <h4>Welcome Back</h4>
+                        <h4>Enter OTP</h4>
                     </div>
                     <div class="card-body bg-dark">
-                        <form action="<?= $serverName; ?>/login" method="post">
+                        <form action="<?= $serverName; ?>/verify" method="post">
                             <div class="form-group">
-                                <label for="email"><span class="fieldInfo">Email:</span></label>
+                                <label for="otp"><span class="fieldInfo">Check your email for OTP:</span></label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text text-white bg-info"><i class="fas fa-envelope"></i></span>
+                                        <span class="input-group-text text-white bg-info"><i class="fas fa-key"></i></span>
                                     </div>
-                                    <input type="email" name="email" id="email" class="form-control">
+                                    <input type="text" name="otp" id="otp" class="form-control">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="password"><span class="fieldInfo">Password:</span></label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text text-white bg-info"><i class="fas fa-lock"></i></span>
-                                    </div>
-                                    <input type="password" name="password" id="password" class="form-control">
-                                </div>
-                            </div>
-                            <input type="submit" name="submit" class="btn btn-info btn-block" value="Log In">
-                            <div class="text-center my-2">
-                                <h4 class="text-light">Don't have Account? Create One</h4>
-                                <a href="<?= $serverName; ?>/signup" class="btn btn-success btn-block">Sign Up</a>
-                            </div>
+                            <input type="submit" name="authenticate" class="btn btn-success btn-block" value="Submit">
                         </form>
                     </div>
                 </div>
@@ -133,6 +123,7 @@
         </div>
     </section>
     <!-- Main Area End -->
+
     <!-- Footer Start -->
     <footer class="bg-dark text-white py-1">
         <div class="container">

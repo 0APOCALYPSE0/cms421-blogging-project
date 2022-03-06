@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 02, 2021 at 04:57 PM
+-- Generation Time: Mar 06, 2022 at 07:31 PM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.3.11
 
@@ -32,6 +32,7 @@ CREATE TABLE `admins` (
   `id` int(11) NOT NULL,
   `datetime` varchar(50) COLLATE utf32_unicode_ci NOT NULL,
   `username` varchar(50) COLLATE utf32_unicode_ci NOT NULL,
+  `email` varchar(250) COLLATE utf32_unicode_ci NOT NULL,
   `password` varchar(50) COLLATE utf32_unicode_ci NOT NULL,
   `aname` varchar(50) COLLATE utf32_unicode_ci NOT NULL,
   `headline` varchar(30) COLLATE utf32_unicode_ci NOT NULL,
@@ -45,10 +46,23 @@ CREATE TABLE `admins` (
 -- Dumping data for table `admins`
 --
 
-INSERT INTO `admins` (`id`, `datetime`, `username`, `password`, `aname`, `headline`, `bio`, `image`, `addedby`, `permission`) VALUES
-(1, '19 Jan 20 17:50:30', 'aakash', '123', 'Aakash Giri', 'Software Developer', 'My Name is Aakash Giri. I am a software Developer. I pursued my B.Tech in stream of Electronics and Communication Engineering.', 'Aakash.jpg', 'Admin', 'Superuser'),
-(6, '19 Jan 20 17:51:30', 'vikash', '123', 'Vikash Giri', '', '', '', 'aakash', 'Admin'),
-(8, ' 1 Oct 21 00:02:43', 'test', '123', 'test', '', '', '', 'System', 'User');
+INSERT INTO `admins` (`id`, `datetime`, `username`, `email`, `password`, `aname`, `headline`, `bio`, `image`, `addedby`, `permission`) VALUES
+(1, '19 Jan 20 17:50:30', 'aakash', 'giriaakash00@gmail.com', '123', 'Aakash Giri', 'Software Developer', 'My Name is Aakash Giri. I am a software Developer. I pursued my B.Tech in stream of Electronics and Communication Engineering.', 'Aakash.jpg', 'Admin', 'Superuser'),
+(6, '19 Jan 20 17:51:30', 'vikash', '', '123', 'Vikash Giri', '', '', '', 'aakash', 'Admin'),
+(8, ' 1 Oct 21 00:02:43', 'test', '', '123', 'test', '', '', '', 'System', 'User');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `authentication`
+--
+
+CREATE TABLE `authentication` (
+  `id` int(11) NOT NULL,
+  `otp` varchar(10) NOT NULL,
+  `expired` int(11) NOT NULL,
+  `created` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -144,6 +158,12 @@ ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `authentication`
+--
+ALTER TABLE `authentication`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `category`
 --
 ALTER TABLE `category`
@@ -171,6 +191,12 @@ ALTER TABLE `post`
 --
 ALTER TABLE `admins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `authentication`
+--
+ALTER TABLE `authentication`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `category`

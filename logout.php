@@ -6,6 +6,7 @@
     $_SESSION['userID'] = null;
     $_SESSION['username'] = null;
     $_SESSION['adminName'] = null;
+    $_SESSION['sessionId'] = null;
     // unset($_SESSION['userID']);
     // unset($_SESSION['username']);
     // unset($_SESSION['adminName']);

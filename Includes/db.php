@@ -1,4 +1,5 @@
 <?php
+    date_default_timezone_set('Asia/Kolkata');
     $DSN = "mysql:host=localhost; dbms=CMS4.2.1";
     // $conn = new PDO($DSN, 'root', '');
     if($_SERVER['SERVER_NAME'] == 'localhost'){

@@ -10,6 +10,7 @@
     if(isset($_POST['submit'])){
         $name = $_POST['name'];
         $username = $_POST['username'];
+        $email = $_POST['email'];
         $password = $_POST['password'];
         $confirmPassword = $_POST['confirmPassword'];
         $addedby = 'System';
@@ -18,7 +19,7 @@
         $currentTime = time();
         $dateTime = strftime("%e %b %y %H:%M:%S", $currentTime);
 
-        if(empty($username) || empty($password)){
+        if(empty($username) || empty($password) || empty($email) || empty($confirmPassword) || empty($name)){
             $_SESSION['ErrorMessage'] = 'All fields must be filled out.';
             Redirect_To($serverName."/signup");
         }else if(strlen($password)<3){
@@ -30,10 +31,13 @@
         }elseif(checkUsernameExist($username)){
             $_SESSION['ErrorMessage'] = 'This username is already taken. Please choose another one.';
             Redirect_To($serverName."/signup");
+        }elseif(checkEmailExist($email)){
+            $_SESSION['ErrorMessage'] = 'This email is already taken. Please choose another one.';
+            Redirect_To($serverName."/signup");
         }else{
-            $sql = "INSERT INTO admins(datetime, username, password, aname, addedby, permission) VALUES(?, ?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO admins(datetime, username, email, password, aname, addedby, permission) VALUES(?, ?, ?, ?, ?, ?, ?);";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssss", $dateTime, $username, $password, $name, $addedby, $permission);
+            $stmt->bind_param("sssssss", $dateTime, $username, $email, $password, $name, $addedby, $permission);
             $execute = $stmt->execute();
             if($execute){
                 $_SESSION['SuccessMessage'] = $name." You have signed up successfully.";
@@ -134,6 +138,15 @@
                                         <span class="input-group-text text-white bg-info"><i class="fas fa-user"></i></span>
                                     </div>
                                     <input type="text" name="username" id="username" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><span class="fieldInfo">Email:</span></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-white bg-info"><i class="fas fa-envelope"></i></span>
+                                    </div>
+                                    <input type="email" name="email" id="email" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">

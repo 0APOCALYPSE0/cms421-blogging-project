@@ -52,15 +52,50 @@
         }
     }
 
-    function loginAttempt($username, $password){
+    function checkEmailExist($email){
         global $conn;
-        $sql = "SELECT * FROM admins WHERE username='$username' AND password='$password' LIMIT 1";
+        $sql = "SELECT * FROM admins WHERE email='$email'";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function loginAttempt($email, $password){
+        global $conn;
+        $sql = "SELECT * FROM admins WHERE email='$email' AND password='$password' LIMIT 1";
             $result = mysqli_query($conn, $sql);
             if (mysqli_num_rows($result) > 0){
                 return mysqli_fetch_assoc($result);
             }else{
                 return null;
             }
+    }
+
+    function sendOtp($email){
+        global $conn;
+        $otp = rand(100000, 999999);
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .= 'From: giriaakash9@gmail.com' . "\r\n";
+        $messageBody = "One Time Password for login authentication is: " . $otp;
+        $messageBody = wordwrap($messageBody,70);
+        $subject = "OTP to Login";
+        $mailStatus = mail($email, $subject, $messageBody, $headers);
+        if($mailStatus == 1) {
+            $insertQuery = "INSERT INTO authentication(otp,	expired, created) VALUES ('".$otp."', 0, '".date("Y-m-d H:i:s")."')";
+            $result = mysqli_query($conn, $insertQuery);
+            $insertID = mysqli_insert_id($conn);
+            if(!empty($insertID)) {
+                echo "hi";
+                header("Location:verify");
+            }
+        }else{
+            $_SESSION['ErrorMessage'] = "Internal Server Error. Try again....";
+            Redirect_To($GLOBALS['serverName']."/login");
+        }
     }
 
     function confirmLogin(){

@@ -12,6 +12,7 @@
     if(isset($_POST['submit'])){
         $userName = $_POST['userName'];
         $adminName = $_POST['name'];
+        $email = $_POST['email'];
         $password = $_POST['password'];
         $cPassword = $_POST['cPassword'];
         $admin = $_SESSION['username'];
@@ -20,7 +21,7 @@
         $currentTime = time();
         $dateTime = strftime("%e %b %y %H:%M:%S", $currentTime);
 
-        if(empty($userName) || empty($password) || empty($cPassword)){
+        if(empty($userName) || empty($password) || empty($cPassword) || empty($adminName) || empty($email)){
             $_SESSION['ErrorMessage'] = 'All fields must be filled out.';
             Redirect_To($serverName."/admin?page=1");
         }elseif(strlen($password)<3){
@@ -32,10 +33,13 @@
         }elseif(checkUsernameExist($userName)){
             $_SESSION['ErrorMessage'] = 'This username is already taken. Please choose another one.';
             Redirect_To($serverName."/admin?page=1");
+        }elseif(checkEmailExist($email)){
+                $_SESSION['ErrorMessage'] = 'This email is already taken. Please choose another one.';
+                Redirect_To($serverName."/admin?page=1");
         }else{
-            $sql = "INSERT INTO admins(datetime, username, password, aname, addedby, permission) VALUES(?, ?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO admins(datetime, username, email, password, aname, addedby, permission) VALUES(?, ?, ?, ?, ?, ?, ?);";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssss", $dateTime, $userName, $password, $adminName, $admin, $permission);
+            $stmt->bind_param("ssssss", $dateTime, $userName, $email, $password, $adminName, $admin, $permission);
             $execute = $stmt->execute();
             $last_id = $conn->insert_id;
             // $sql = "INSERT INTO category(title, author, datetime)";
@@ -146,7 +150,15 @@
                             <div class="form-group">
                                 <label for="name"><span class="fieldInfo">Name</span></label>
                                 <input type="text" name='name' class="form-control" id='name' placeholder='Enter Name'>
-                                <small class="text-warning text-muted">Optional</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><span class="fieldInfo">Email:</span></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-white bg-info"><i class="fas fa-envelope"></i></span>
+                                    </div>
+                                    <input type="email" name="email" id="email" class="form-control">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="password"><span class="fieldInfo">Password</span></label>
