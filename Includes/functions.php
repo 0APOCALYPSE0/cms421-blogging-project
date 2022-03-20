@@ -1,5 +1,7 @@
 <?php
     require_once 'db.php';
+    require_once __DIR__.'./../vendor/autoload.php';
+    require_once __DIR__.'./../config.php';
 
     // $serverName = $_SERVER['SERVER_NAME'];
     define("BASE_PATH", url());
@@ -77,14 +79,30 @@
     function sendOtp($email){
         global $conn;
         $otp = rand(100000, 999999);
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= 'From: giriaakash9@gmail.com' . "\r\n";
-        $messageBody = "One Time Password for login authentication is: " . $otp;
-        $messageBody = wordwrap($messageBody,70);
-        $subject = "OTP to Login";
-        $mailStatus = mail($email, $subject, $messageBody, $headers);
-        if($mailStatus == 1) {
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+        try {
+            //Server settings
+            $mail->SMTPDebug = CONTACTFORM_PHPMAILER_DEBUG_LEVEL;
+            $mail->isSMTP();
+            $mail->Host = CONTACTFORM_SMTP_HOSTNAME;
+            $mail->SMTPAuth = true;
+            $mail->Username = CONTACTFORM_SMTP_USERNAME;
+            $mail->Password = CONTACTFORM_SMTP_PASSWORD;
+            $mail->SMTPSecure = CONTACTFORM_SMTP_ENCRYPTION;
+            $mail->Port = CONTACTFORM_SMTP_PORT;
+
+            // Recipients
+            $mail->setFrom(CONTACTFORM_FROM_ADDRESS, CONTACTFORM_FROM_NAME);
+            $mail->addAddress($email, "Aakash Giri");
+            $mail->addReplyTo("giriaakash00@gmail.com", "CMS Blogging");
+
+            // Content
+            $mail->Subject = "OTP to Login";
+            $mail->Body    = "One Time Password for login authentication is: " . $otp;
+            $mail->Body = wordwrap($mail->Body,70);
+
+            $mail->send();
             $insertQuery = "INSERT INTO authentication(otp,	expired, created) VALUES ('".$otp."', 0, '".date("Y-m-d H:i:s")."')";
             $result = mysqli_query($conn, $insertQuery);
             $insertID = mysqli_insert_id($conn);
@@ -92,7 +110,7 @@
                 echo "hi";
                 header("Location:verify");
             }
-        }else{
+        } catch (Exception $e) {
             $_SESSION['ErrorMessage'] = "Internal Server Error. Try again....";
             Redirect_To($GLOBALS['serverName']."/login");
         }

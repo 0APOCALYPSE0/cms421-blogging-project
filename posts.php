@@ -171,7 +171,7 @@
                                 echo $Admin;
                                 ?>
                             </td>
-                            <td><img src="<?= $uploadBaseURL; ?>/<?= $Image; ?>" alt="<?= $Image; ?>" width='170px;' height='50px;'></td>
+                            <td><img src="<?= $uploadBaseURL; ?>/<?= $Image; ?>" alt="<?= $Image; ?>" width='170px;' height='50px;' style="object-fit: cover;" ></td>
                             <td>
                                 <span class="badge badge-success">
                                     <?php echo approvedCommentsAccordingToPost($Id); ?>
