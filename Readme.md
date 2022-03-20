@@ -6,45 +6,22 @@
 
 1. Clone the project inside htdocs folder of the XAMPP server.
 2. Import the CMS4_2_1.sql (provided in the project folder) file inside your my sql database.
-3. Run your apache and mysql using XAMPP tool.
-4. For sending otp to your email you have to configure your PHP.ini and sendmail.ini file using steps below.
+3. Install the composer and then install PHPMailer library.
+4. Run your apache and mysql using XAMPP tool.
+5. For sending otp to your email you have to configure config.php file. You can just replace CONTACTFORM_FROM_ADDRESS, CONTACTFORM_FROM_NAME
+   CONTACTFORM_SMTP_USERNAME and CONTACTFORM_SMTP_PASSWORD with your's in config.php.
+6. Now set up SMTP server using gmail. For that you can follow below steps.
 
+## How to get your SMTP credentials
 
-if you are using XAMPP then you can easily send mail from localhost.
+To be able to send messages with this contact form, you'll need a working SMTP service. InfinityFree does not provide this with free hosting, but you can use third party SMTP services.
 
-for example you can configure C:\xampp\php\php.ini and c:\xampp\sendmail\sendmail.ini for gmail to send mail.
+A simple, free option to use is Gmail. You can use Gmail to send your messages like so:
 
-in C:\xampp\php\php.ini find extension=php_openssl.dll and remove the semicolon from the beginning of that line to make SSL working for gmail for localhost.
-
-in php.ini file find [mail function] and change
-
-```
-SMTP=smtp.gmail.com
-smtp_port=587
-sendmail_from = my-gmail-id@gmail.com
-sendmail_path = "C:\xampp\sendmail\sendmail.exe -t"
-```
-
-(use the above send mail path only and it will work)
-
-Now Open C:\xampp\sendmail\sendmail.ini. Replace all the existing code in sendmail.ini with following code
-
-```
-[sendmail]
-
-smtp_server=smtp.gmail.com
-smtp_port=587
-error_logfile=error.log
-debug_logfile=debug.log
-auth_username=my-gmail-id@gmail.com
-auth_password=my-gmail-password
-force_sender=my-gmail-id@gmail.com
-
-```
-
-
-Now you have done!! create php file with mail function and send mail from localhost.
-
+1. Sign up for a free Gmail account.
+2. Enable Two Factor Authentication on the Google account: https://myaccount.google.com/signinoptions/two-step-verification
+3. Generate an App Specific Password for the account: https://myaccount.google.com/apppasswords
+4. In the configuration file, set the SMTP Hostname `smtp.gmail.com`, enter your full Gmail address in the SMTP Username field and enter the App Specific Password in the SMTP Password field.
 
 
 ##  ***************** Database Information *******************
