@@ -204,7 +204,7 @@
                                 if($page>1){
                         ?>
                         <li class="page-item">
-                            <a href="<?= $serverName; ?>/post?page=<?= $page-1; ?>" class="page-link">&laquo;</a>
+                            <a href="<?= $serverName; ?>/posts?page=<?= $page-1; ?>" class="page-link">&laquo;</a>
                         </li>
                         <?php
                                 }
@@ -226,13 +226,13 @@
                                     if($i == $page){
                         ?>
                         <li class="page-item active">
-                            <a href="<?= $serverName; ?>/post?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
+                            <a href="<?= $serverName; ?>/posts?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
                         </li>
                         <?php
                                     }else{
                         ?>
                         <li class="page-item">
-                            <a href="<?= $serverName; ?>/post?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
+                            <a href="<?= $serverName; ?>/posts?page=<?= $i; ?>" class="page-link"><?= $i; ?></a>
                         </li>
                         <?php
                                     }
@@ -245,7 +245,7 @@
                                 if($page+1 <= $postPagination){
                         ?>
                         <li class="page-item">
-                            <a href="<?= $serverName; ?>/post?page=<?= $page+1; ?>" class="page-link">&raquo;</a>
+                            <a href="<?= $serverName; ?>/posts?page=<?= $page+1; ?>" class="page-link">&raquo;</a>
                         </li>
                         <?php
                                 }
