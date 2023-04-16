@@ -46,6 +46,12 @@ echo '<changefreq>daily</changefreq>' . PHP_EOL;
 echo '</url>' . PHP_EOL;
 
 echo '<url>' . PHP_EOL;
+echo '<loc>'.$base_url.'/news</loc>' . PHP_EOL;
+echo '<lastmod>'.$date.'</lastmod>' . PHP_EOL;
+echo '<changefreq>daily</changefreq>' . PHP_EOL;
+echo '</url>' . PHP_EOL;
+
+echo '<url>' . PHP_EOL;
 echo '<loc>'.$base_url.'/login</loc>' . PHP_EOL;
 echo '<lastmod>'.$date.'</lastmod>' . PHP_EOL;
 echo '<changefreq>daily</changefreq>' . PHP_EOL;
