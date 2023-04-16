@@ -50,6 +50,9 @@
                         <a href="<?= $serverName; ?>/blog/1" class="nav-link">Blogs</a>
                     </li>
                     <li class="nav-item">
+                        <a href="<?= $serverName; ?>/news" class="nav-link">News</a>
+                    </li>
+                    <li class="nav-item">
                         <a href="<?= $serverName; ?>/contact" class="nav-link">Contact Us</a>
                     </li>
                 </ul>

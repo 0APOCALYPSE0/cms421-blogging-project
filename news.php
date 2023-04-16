@@ -2,10 +2,8 @@
     require_once 'Includes/db.php';
     require 'Includes/functions.php';
     require 'Includes/sessions.php';
-    $category = "";
-    if(isset($_GET['category'])){
-        $category = $_GET['category'];
-    }
+    require_once(__DIR__."/vendor/autoload.php");
+    require_once(__DIR__."/vendor/fabpot/goutte/Goutte/Client.php");
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +26,7 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $cssBaseURL ?>/style.css">
-    <title><?= $category; ?> Blogs</title>
+    <title>News</title>
     <style>
         .heading{
             font-family: Bitter, Georgia, "Times New Roman", Times, serif;
@@ -97,135 +95,54 @@
         <div class="row mt-4">
             <!-- Main Area Start -->
             <div class="col-lg-8 col-md-12">
-                <h1 class="px-3">Latest Popular Blogs <?= $category != '' ? 'on '.$category : ''; ?></h1>
+                <h1 class="px-3">Latest Popular News</h1>
                 <?php echo ErrorMessage(); echo SuccessMessage(); ?>
                 <?php
-                    $showPostFrom = 0;
-                    if(isset($_GET['page'])){
-                        $page = $_GET['page'];
-                        if($page === 0 || $page <= 1){
-                            $showPostFrom = 0;
-                        }else{
-                            $showPostFrom = ($page*5)-5;
-                        }
-                    }
-                    if(isset($_GET['searchButton'])){
-                        $search = $_GET['search'];
-                        $sql = "SELECT * FROM post WHERE status='publish' AND (datetime LIKE '%$search%' OR title LIKE '%$search%' OR category LIKE '%$search%' OR post LIKE '%$search%') ORDER BY id DESC LIMIT $showPostFrom,5";
-                    }
-                    // elseif(isset($_GET['page'])){
-                    //     $page = $_GET['page'];
-                    //     if($page === 0 || $page < 1){
-                    //         $showPostFrom = 0;
-                    //     }else{
-                    //         $showPostFrom = ($page*5)-5;
-                    //     }
-                    //     $sql = "SELECT * FROM post ORDER BY id DESC LIMIT $showPostFrom,5";
-                    // }
-                    elseif(isset($_GET['category'])){
-                        $category = $_GET['category'];
-                        $sql = "SELECT * FROM post WHERE category='$category' AND status='publish' ORDER BY id DESC LIMIT $showPostFrom,5";
-                    }else{
-                        $sql = "SELECT * FROM post WHERE status='publish' ORDER BY id DESC LIMIT $showPostFrom,5";
-                    }
-                    $result = mysqli_query($conn, $sql);
-                    if (mysqli_num_rows($result) > 0){
-                        while($row = mysqli_fetch_assoc($result)) {
-                            $PostId = $row['id'];
-                            $PostSlug = $row['slug'];
-                            $PostTags = $row['tags'];
-                            $DateTime = $row['datetime'];
-                            $PostTitle = $row['title'];
-                            $Category = $row['category'];
-                            $Admin = $row['author'];
-                            $Image = $row['image'];
-                            $PostDescription = $row['post'];
+                    use Goutte\Client;
+                    $client = new Client();
+
+                    $url = "https://inshorts.com/en/read";
+                    $crawler = $client->request('GET', $url);
+
+                    $crawler->filter('.news-card')->each(function ($node) {
+                      $title = $node->filter('.news-card-title > a > span')->text();
+                      $image = $node->filter('[itemprop="url"]')->attr('content');
+                      $description = $node->filter('.news-card-content > div')->html();
+                      $sourceUrl = $node->filter('.news-card-footer > .read-more > a');
+                      if($sourceUrl->count() > 0){
+                        $url = $sourceUrl->attr('href');
+                        $source = $sourceUrl->text();
+                      }
                 ?>
                 <div class="card my-2 shadow">
-                    <img src="<?= $uploadBaseURL ?>/<?= htmlentities($Image); ?>" title="<?= $PostTitle; ?>" alt="<?= $Image; ?>" class='shadow img-fluid card-img-top' max-height='450px;'>
-                    <div class="card-body">
-                        <h4 class="card-title"><?= htmlentities($PostTitle); ?></h4>
-                        <small class='text-muted'>Category: <span class="text-dark"><a href="<?= $serverName; ?>/category/<?= $Category; ?>/1"><?= $Category; ?></a></span> & Written By <span class="text-dark"><a href="<?= $serverName; ?>/profile/<?= $Admin; ?>"><?= htmlentities($Admin); ?></a></span> On <span class="text-dark"><?= htmlentities($DateTime); ?></span></small>
-                        <?php
-                            if(strlen($PostTags) != 0){
-                        ?>
-                            <div class="my-1">
-                                <span><i class="fas fa-tags"></i> <?= $PostTags; ?></span>
-                            </div>
-                        <?php } ?>
-                        <span style="float:right;" class="badge badge-dark text-light">Comments <?= approvedCommentsAccordingToPost($PostId); ?></span>
-                        <hr>
-                        <p class="card-text">
-                        <?php
-                            if(strlen($PostDescription)>150){ $PostDescription=substr($PostDescription, 0, 150).'...'; }
-                            echo $PostDescription;
-                        ?>
-                        </p>
-                        <a href="<?= $serverName; ?>/post/<?= $PostSlug; ?>" style="float:right;"><span class='btn btn-info'>Read More >></span></a>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <img src="<?= htmlentities($image); ?>" title="<?= $title; ?>" alt="<?= $image; ?>" class='shadow card-img-top' height='268px;' width="320px">
                     </div>
+                    <div class="col-sm-8">
+                      <div class="card-body">
+                          <h5 class="card-title"><?= htmlentities($title); ?></h5>
+                          <hr>
+                          <p class="card-text">
+                          <?php
+                              if(strlen($description)>150){ $description; }
+                              echo $description;
+                          ?>
+                          </p>
+                          <?php
+                            if(isset($url)){
+                          ?>
+                          Read more at <a href="<?= $url ?>"><?= $source ?></a>
+                          <?php
+                            }
+                          ?>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <?php
-                        }
-                    }else{
-                        echo "<h4 class='text-danger text-center my-5'>No Post Found</h4>";
-                    }
+                  });
                 ?>
-                <br>
-                <!-- Pagination Start  -->
-                <nav>
-                    <ul class="pagination pagination-link">
-                        <!-- Backward Button Start -->
-                        <?php
-                            if(isset($page)){
-                                if($page>1){
-                        ?>
-                        <li class="page-item">
-                            <a href="<?= $serverName; ?>/blog/<?= $page-1; ?>" class="page-link">&laquo;</a>
-                        </li>
-                        <?php
-                                }
-                            }
-                        ?>
-                        <!-- Backward Button End -->
-                        <?php
-                            if(isset($page)){
-                                $sql = "SELECT * FROM post";
-                                $result = mysqli_query($conn, $sql);
-                                $totalPost = mysqli_num_rows($result);
-                                $postPagination = ceil($totalPost/5);
-                                for($i=1; $i<=$postPagination; $i++){
-                                    if($i == $page){
-                        ?>
-                        <li class="page-item active">
-                            <a href="<?= $serverName; ?>/blog/<?= $i; ?>" class="page-link"><?= $i; ?></a>
-                        </li>
-                        <?php
-                                    }else{
-                        ?>
-                        <li class="page-item">
-                            <a href="<?= $serverName; ?>/blog/<?= $i; ?>" class="page-link"><?= $i; ?></a>
-                        </li>
-                        <?php
-                                    }
-                                }
-                            }
-                        ?>
-                        <!-- Forward Button Start -->
-                        <?php
-                            if(isset($page) && !empty($page)){
-                                if($page+1 <= $postPagination){
-                        ?>
-                        <li class="page-item">
-                            <a href="<?= $serverName; ?>/blog/<?= $page+1; ?>" class="page-link">&raquo;</a>
-                        </li>
-                        <?php
-                                }
-                            }
-                        ?>
-                        <!-- Forward Button End -->
-                    </ul>
-                </nav>
-                <!-- Pagination End -->
            </div>
             <!-- Main Area End -->
 

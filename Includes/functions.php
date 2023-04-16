@@ -1,7 +1,7 @@
 <?php
     require_once 'db.php';
-    require_once __DIR__.'./../vendor/autoload.php';
-    require_once __DIR__.'./../config.php';
+    require_once __DIR__.'/../vendor/autoload.php';
+    require_once __DIR__ . '/../config.php';
 
     // $serverName = $_SERVER['SERVER_NAME'];
     define("BASE_PATH", url());
@@ -9,6 +9,7 @@
     $cssBaseURL = $serverName.'/css';
     $imagesBaseURL = $serverName.'/Images';
     $uploadBaseURL = $serverName.'/Upload';
+    $jsBaseURL = $serverName.'/js';
 
     function url(){
         return sprintf(
