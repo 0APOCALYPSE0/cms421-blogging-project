@@ -104,11 +104,11 @@
                     $url = "https://inshorts.com/en/read";
                     $crawler = $client->request('GET', $url);
 
-                    $crawler->filter('.news-card')->each(function ($node) {
-                      $title = $node->filter('.news-card-title > a > span')->text();
+                    $crawler->filter('div[itemtype="http://schema.org/NewsArticle"]')->each(function ($node) {
+                      $title = $node->filter('span[itemprop="headline"]')->text();
                       $image = $node->filter('[itemprop="url"]')->attr('content');
-                      $description = $node->filter('.news-card-content > div')->html();
-                      $sourceUrl = $node->filter('.news-card-footer > .read-more > a');
+                      $description = $node->filter('div[itemprop="articleBody"]')->html();
+                      $sourceUrl = $node->filter('div > a')->last();
                       if($sourceUrl->count() > 0){
                         $url = $sourceUrl->attr('href');
                         $source = $sourceUrl->text();
